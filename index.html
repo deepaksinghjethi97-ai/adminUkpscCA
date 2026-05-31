@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Admin Panel — Current Affairs Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0d0f14;--bg2:#131720;--bg3:#1a1f2e;--bg4:#222840;
+  --border:#2a3050;--border2:#3a4570;
+  --text:#e8ecf8;--text2:#8a9bc0;--text3:#5a6888;
+  --accent:#4f6ef7;--accent2:#7c5af7;
+  --green:#3de0a0;--amber:#f7b93d;--teal:#3dd5e0;--red:#f75a7c;
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:10px;--r2:16px;
+}
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;font-size:14px;line-height:1.6}
+button{font-family:var(--font);cursor:pointer}
+input,select,textarea{font-family:var(--font)}
+
+/* ── LOGIN SCREEN ─────────────────────────────── */
+#login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
+.login-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:36px;width:100%;max-width:360px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.login-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff}
+.login-card h2{font-size:17px;font-weight:700;margin-bottom:4px}
+.login-card p{font-size:12px;color:var(--text3);margin-bottom:20px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;letter-spacing:.3px}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:.15s}
+.field input:focus{border-color:var(--accent)}
+.btn-primary{width:100%;background:var(--accent);border:none;border-radius:8px;padding:10px;color:#fff;font-size:13px;font-weight:600;transition:.15s}
+.btn-primary:hover{background:#3a5ce6}
+.login-err{background:rgba(247,90,124,.1);border:1px solid rgba(247,90,124,.3);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--red);margin-bottom:12px;display:none}
+
+/* ── APP SHELL ────────────────────────────────── */
+#app{display:none;height:100vh;flex-direction:column}
+#app.visible{display:flex}
+
+/* ── HEADER ───────────────────────────────────── */
+#hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;flex-shrink:0}
+.hdr-left{display:flex;align-items:center;gap:10px}
+.hdr-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
+.hdr-title{font-size:13px;font-weight:700}
+.hdr-sub{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.admin-chip{background:rgba(247,90,124,.15);border:1px solid rgba(247,90,124,.3);color:var(--red);padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.btn-outline{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text2);font-size:12px;transition:.15s;display:flex;align-items:center;gap:6px}
+.btn-outline:hover{border-color:var(--border2);color:var(--text)}
+
+/* ── BODY ─────────────────────────────────────── */
+#body{display:flex;flex:1;overflow:hidden}
+
+/* ── LEFT PANEL (article list) ────────────────── */
+#left-panel{width:340px;min-width:340px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.panel-hdr h3{font-size:13px;font-weight:600}
+.btn-add{background:var(--accent);border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-add:hover{background:#3a5ce6}
+.panel-filters{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-shrink:0}
+.panel-filters select,.panel-filters input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 9px;color:var(--text);font-size:11.5px;outline:none}
+.panel-filters select:focus,.panel-filters input:focus{border-color:var(--accent)}
+#article-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#article-list::-webkit-scrollbar{width:4px}
+#article-list::-webkit-scrollbar-thumb{background:var(--border)}
+.art-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;position:relative}
+.art-item:hover{background:var(--bg3)}
+.art-item.selected{background:rgba(79,110,247,.08);border-left:3px solid var(--accent)}
+.art-item .ai-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:5px;font-size:8.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
+.art-item .ai-title{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:4px}
+.art-item .ai-meta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:7px}
+.art-item .ai-meta i{font-size:11px}
+.art-dot{position:absolute;top:12px;right:12px;width:6px;height:6px;border-radius:50%}
+.d-high{background:var(--red)}
+.d-med{background:var(--amber)}
+.d-low{background:var(--green)}
+.list-empty{padding:32px;text-align:center;color:var(--text3);font-size:13px}
+.list-empty i{font-size:32px;display:block;margin-bottom:8px;opacity:.4}
+.list-load-more{padding:12px;text-align:center}
+.list-load-more button{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 18px;color:var(--text2);font-size:12px;transition:.15s}
+.list-load-more button:hover{color:var(--text);border-color:var(--border2)}
+
+/* ── RIGHT PANEL (editor) ─────────────────────── */
+#right-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.editor-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text3);gap:10px}
+.editor-placeholder i{font-size:44px;opacity:.3}
+.editor-placeholder p{font-size:13px}
+
+/* ── EDITOR FORM ──────────────────────────────── */
+#editor-form{display:none;flex-direction:column;height:100%}
+#editor-form.visible{display:flex}
+.editor-bar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2)}
+.editor-bar-left{display:flex;align-items:center;gap:8px}
+.editor-bar h3{font-size:13px;font-weight:600}
+.editor-bar-right{display:flex;align-items:center;gap:8px}
+.btn-save{background:var(--green);border:none;border-radius:8px;padding:7px 18px;color:#0d1a12;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;transition:.15s}
+.btn-save:hover{filter:brightness(1.1)}
+.btn-save:disabled{opacity:.5;cursor:not-allowed}
+.btn-delete{background:rgba(247,90,124,.1);border:1px solid rgba(247,90,124,.3);border-radius:8px;padding:7px 14px;color:var(--red);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-delete:hover{background:rgba(247,90,124,.2)}
+.btn-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text2);font-size:12.5px;transition:.15s}
+.btn-cancel:hover{color:var(--text);border-color:var(--border2)}
+.editor-scroll{flex:1;overflow-y:auto;padding:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.editor-scroll::-webkit-scrollbar{width:4px}
+.editor-scroll::-webkit-scrollbar-thumb{background:var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.form-row.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.3px}
+.form-group label .req{color:var(--red);margin-left:2px}
+.form-group input,.form-group select,.form-group textarea{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:.15s;
+  width:100%;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group select option{background:var(--bg2)}
+.form-group textarea{resize:vertical;min-height:70px;line-height:1.6}
+
+/* ── RICH TEXT CONTENT BUILDER ────────────────── */
+.content-builder{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
+.cb-toolbar{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.cb-toolbar-label{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-right:4px}
+.cb-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text2);font-size:11px;display:flex;align-items:center;gap:4px;transition:.15s;white-space:nowrap}
+.cb-btn:hover{color:var(--text);border-color:var(--border2)}
+.cb-btn i{font-size:13px}
+.cb-blocks{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:120px}
+.cb-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.cb-block-hdr{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.cb-block-type{font-size:9px;font-weight:700;letter-spacing:.8px;color:var(--accent);text-transform:uppercase;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);border-radius:4px;padding:2px 6px}
+.cb-block-actions{margin-left:auto;display:flex;gap:4px}
+.cb-action{background:transparent;border:none;color:var(--text3);font-size:14px;padding:2px 4px;border-radius:4px;transition:.15s}
+.cb-action:hover{color:var(--text);background:var(--bg4)}
+.cb-action.del:hover{color:var(--red)}
+.cb-block-body{padding:10px 12px}
+.cb-block-body textarea,.cb-block-body input{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  border-radius:7px;padding:7px 10px;color:var(--text);font-size:12.5px;
+  outline:none;transition:.15s;resize:vertical;line-height:1.6;
+}
+.cb-block-body textarea:focus,.cb-block-body input:focus{border-color:var(--accent)}
+.cb-hint{font-size:10px;color:var(--text3);margin-top:4px}
+/* table block */
+.tbl-header-row,.tbl-data-row{display:flex;gap:6px;margin-bottom:6px}
+.tbl-cell{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none}
+.tbl-cell:focus{border-color:var(--accent)}
+.add-row-btn,.add-col-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text3);font-size:11px;transition:.15s;margin-top:2px;margin-right:4px}
+.add-row-btn:hover,.add-col-btn:hover{color:var(--text);border-color:var(--border2)}
+.remove-row-btn{background:transparent;border:none;color:var(--text3);font-size:14px;padding:2px 4px;cursor:pointer;transition:.15s;flex-shrink:0}
+.remove-row-btn:hover{color:var(--red)}
+
+/* ── TOAST ────────────────────────────────────── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 4px 24px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:.3s;z-index:999;display:flex;align-items:center;gap:8px}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.success{border-color:rgba(61,224,160,.3);color:var(--green)}
+#toast.error{border-color:rgba(247,90,124,.3);color:var(--red)}
+
+/* ── CONFIRM DIALOG ───────────────────────────── */
+#confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
+#confirm-overlay.open{display:flex}
+.confirm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;max-width:360px;width:100%;text-align:center}
+.confirm-card i{font-size:32px;color:var(--red);margin-bottom:10px}
+.confirm-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
+.confirm-card p{font-size:12.5px;color:var(--text2);margin-bottom:18px}
+.confirm-btns{display:flex;gap:8px;justify-content:center}
+.btn-confirm-del{background:var(--red);border:none;border-radius:8px;padding:8px 20px;color:#fff;font-weight:600;font-size:13px}
+.btn-confirm-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 20px;color:var(--text2);font-size:13px}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media(max-width:900px){
+  #left-panel{width:100%;min-width:unset;position:fixed;left:0;top:56px;bottom:0;z-index:90;transform:translateX(-100%);transition:.25s}
+  #left-panel.open{transform:translateX(0)}
+  #body{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-badge">CA</div>
+      <div>
+        <div style="font-size:13px;font-weight:700">Admin Panel</div>
+        <div style="font-size:10px;color:var(--text3)">Current Affairs Hub</div>
+      </div>
+    </div>
+    <h2>Sign in</h2>
+    <p>Only authorised editors can access this panel.</p>
+    <div class="login-err" id="login-err"></div>
+    <div class="field">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email"/>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="btn-primary" onclick="doLogin()" id="login-btn">Sign in</button>
+  </div>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="app">
+  <!-- HEADER -->
+  <div id="hdr">
+    <div class="hdr-left">
+      <div class="hdr-badge">CA</div>
+      <div>
+        <div class="hdr-title">Current Affairs Hub</div>
+        <div class="hdr-sub">Admin Panel</div>
+      </div>
+      <span class="admin-chip">EDITOR</span>
+    </div>
+    <div class="hdr-right">
+      <span style="font-size:12px;color:var(--text3)" id="admin-email"></span>
+      <a href="index.html" target="_blank" class="btn-outline"><i class="ti ti-external-link"></i> View Site</a>
+      <button class="btn-outline" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div id="body">
+    <!-- LEFT: article list -->
+    <div id="left-panel">
+      <div class="panel-hdr">
+        <h3>Articles</h3>
+        <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New Article</button>
+      </div>
+      <div class="panel-filters">
+        <select id="filter-cat" onchange="applyFilter()">
+          <option value="">All Categories</option>
+          <optgroup label="National">
+            <option value="defence">Defence</option>
+            <option value="tech">Technology</option>
+            <option value="space">Space</option>
+            <option value="appointments">Appointments</option>
+            <option value="governance">Governance</option>
+            <option value="awards">Awards</option>
+            <option value="operations">Operations</option>
+            <option value="rankings">Rankings</option>
+          </optgroup>
+          <optgroup label="Sports">
+            <option value="cricket">Cricket</option>
+            <option value="chess">Chess</option>
+            <option value="badminton">Badminton</option>
+            <option value="tennis">Tennis</option>
+            <option value="football">Football</option>
+            <option value="wrestling">Wrestling</option>
+            <option value="hockey">Hockey</option>
+            <option value="athletics">Athletics</option>
+            <option value="boxing">Boxing</option>
+            <option value="shooting">Shooting</option>
+            <option value="sports-others">Other Sports</option>
+          </optgroup>
+          <optgroup label="International">
+            <option value="intl-tech">Intl. Tech</option>
+            <option value="intl-space">Intl. Space</option>
+            <option value="intl-sports">Intl. Sports</option>
+            <option value="intl-summits">Summits</option>
+            <option value="intl-rankings">Intl. Rankings</option>
+            <option value="intl-health">Health</option>
+            <option value="intl-operations">Intl. Operations</option>
+            <option value="intl-awards">Intl. Awards</option>
+          </optgroup>
+          <optgroup label="State">
+            <option value="uttarakhand">Uttarakhand</option>
+          </optgroup>
+        </select>
+        <input id="filter-search" placeholder="Search…" oninput="applyFilter()"/>
+      </div>
+      <div id="article-list"><div class="list-empty"><i class="ti ti-loader"></i>Loading…</div></div>
+      <div class="list-load-more" id="list-load-more" style="display:none">
+        <button onclick="listLoadMore()">Load more</button>
+      </div>
+    </div>
+
+    <!-- RIGHT: editor -->
+    <div id="right-panel">
+      <div class="editor-placeholder" id="editor-placeholder">
+        <i class="ti ti-edit"></i>
+        <p>Select an article or create a new one</p>
+      </div>
+      <div id="editor-form">
+        <div class="editor-bar">
+          <div class="editor-bar-left">
+            <i class="ti ti-edit" style="font-size:16px;color:var(--accent)"></i>
+            <h3 id="editor-mode-label">New Article</h3>
+          </div>
+          <div class="editor-bar-right">
+            <button class="btn-cancel" onclick="cancelEdit()"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none"><i class="ti ti-trash"></i> Delete</button>
+            <button class="btn-save" id="btn-save" onclick="saveArticle()"><i class="ti ti-device-floppy"></i> Save</button>
+          </div>
+        </div>
+        <div class="editor-scroll">
+          <!-- Meta fields -->
+          <div class="form-row full">
+            <div class="form-group">
+              <label>Title <span class="req">*</span></label>
+              <input id="f-title" placeholder="Enter article title…"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category <span class="req">*</span></label>
+              <select id="f-category">
+                <option value="">— Select —</option>
+                <optgroup label="National">
+                  <option value="defence">Defence</option>
+                  <option value="tech">Technology</option>
+                  <option value="space">Space</option>
+                  <option value="appointments">Appointments</option>
+                  <option value="governance">Governance</option>
+                  <option value="awards">Awards</option>
+                  <option value="operations">Operations</option>
+                  <option value="rankings">Rankings</option>
+                </optgroup>
+                <optgroup label="Sports">
+                  <option value="cricket">Cricket</option>
+                  <option value="chess">Chess</option>
+                  <option value="badminton">Badminton</option>
+                  <option value="tennis">Tennis</option>
+                  <option value="football">Football</option>
+                  <option value="wrestling">Wrestling</option>
+                  <option value="hockey">Hockey</option>
+                  <option value="athletics">Athletics</option>
+                  <option value="boxing">Boxing</option>
+                  <option value="shooting">Shooting</option>
+                  <option value="sports-others">Other Sports</option>
+                </optgroup>
+                <optgroup label="International">
+                  <option value="intl-tech">Intl. Tech</option>
+                  <option value="intl-space">Intl. Space</option>
+                  <option value="intl-sports">Intl. Sports</option>
+                  <option value="intl-summits">Summits</option>
+                  <option value="intl-rankings">Intl. Rankings</option>
+                  <option value="intl-health">Health</option>
+                  <option value="intl-operations">Intl. Operations</option>
+                  <option value="intl-awards">Intl. Awards</option>
+                </optgroup>
+                <optgroup label="State">
+                  <option value="uttarakhand">Uttarakhand</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Importance</label>
+              <select id="f-importance">
+                <option value="high">🔴 High — Must Know</option>
+                <option value="medium">🟡 Medium — Important</option>
+                <option value="low">🟢 Low — Good to Know</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Date <span class="req">*</span></label>
+              <input type="date" id="f-date"/>
+            </div>
+            <div class="form-group">
+              <label>Tags (comma separated)</label>
+              <input id="f-tags" placeholder="e.g. ISRO, missile, 2024"/>
+            </div>
+          </div>
+
+          <!-- Rich text content builder -->
+          <div class="form-group" style="margin-bottom:6px">
+            <label>Article Content <span class="req">*</span></label>
+          </div>
+          <div class="content-builder">
+            <div class="cb-toolbar">
+              <span class="cb-toolbar-label">ADD BLOCK</span>
+              <button class="cb-btn" onclick="addBlock('h2')"><i class="ti ti-heading"></i> Heading 2</button>
+              <button class="cb-btn" onclick="addBlock('h3')"><i class="ti ti-heading"></i> Heading 3</button>
+              <button class="cb-btn" onclick="addBlock('para')"><i class="ti ti-align-left"></i> Paragraph</button>
+              <button class="cb-btn" onclick="addBlock('highlight')"><i class="ti ti-info-circle"></i> Highlight</button>
+              <button class="cb-btn" onclick="addBlock('ul')"><i class="ti ti-list"></i> Bullet List</button>
+              <button class="cb-btn" onclick="addBlock('ol')"><i class="ti ti-list-numbers"></i> Numbered List</button>
+              <button class="cb-btn" onclick="addBlock('table')"><i class="ti ti-table"></i> Table</button>
+            </div>
+            <div class="cb-blocks" id="cb-blocks">
+              <div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">
+                Click a button above to add your first content block
+              </div>
+            </div>
+          </div>
+          <div style="height:24px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TOAST ══════════ -->
+<div id="toast"></div>
+
+<!-- ══════════ CONFIRM DELETE ══════════ -->
+<div id="confirm-overlay">
+  <div class="confirm-card">
+    <i class="ti ti-alert-triangle"></i>
+    <h3>Delete Article?</h3>
+    <p>This action cannot be undone. The article will be permanently deleted.</p>
+    <div class="confirm-btns">
+      <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
+      <button class="btn-confirm-del" onclick="doDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ FIREBASE + ADMIN SCRIPT ══════════ -->
+<script type="module">
+import { initializeApp }       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+                               from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+import {
+  getFirestore, collection, query, where, orderBy, limit,
+  startAfter, getDocs, getDoc, addDoc, updateDoc, deleteDoc,
+  doc, Timestamp, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
+
+/* ── Firebase init ─────────────────────────────── */
+const app = initializeApp({
+  apiKey:"AIzaSyD-U-2tLzpoG1sWuWpsE8TUt74zqAou9UI",
+  authDomain:"current-e1fcd.firebaseapp.com",
+  projectId:"current-e1fcd",
+  storageBucket:"current-e1fcd.firebasestorage.app",
+  messagingSenderId:"1027178531815",
+  appId:"1:1027178531815:web:154a3e3c10c21970edcb42"
+});
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const COL  = "articles";
+const PAGE = 20;
+
+/* ── State ─────────────────────────────────────── */
+let editingId       = null;   // null = new article
+let listLastDoc     = null;
+let listHasMore     = false;
+let filterCat       = "";
+let filterSearch    = "";
+let confirmCallback = null;
+let allListDocs     = [];     // local cache for search
+
+/* ── Auth ───────────────────────────────────────── */
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("app").classList.add("visible");
+    document.getElementById("admin-email").textContent = user.email;
+    loadList(true);
+  } else {
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("app").classList.remove("visible");
+  }
+});
+
+window.doLogin = async function() {
+  const email = document.getElementById("login-email").value.trim();
+  const pass  = document.getElementById("login-pass").value;
+  const btn   = document.getElementById("login-btn");
+  const err   = document.getElementById("login-err");
+  err.style.display = "none";
+  btn.textContent = "Signing in…"; btn.disabled = true;
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+  } catch(e) {
+    err.textContent = "Invalid email or password.";
+    err.style.display = "block";
+    btn.textContent = "Sign in"; btn.disabled = false;
+  }
+};
+
+window.doLogout = () => signOut(auth);
+
+/* ── List ───────────────────────────────────────── */
+async function loadList(fresh = false) {
+  if (fresh) { listLastDoc = null; allListDocs = []; }
+
+  let q;
+  if (filterCat) {
+    q = query(collection(db, COL),
+      where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+  } else {
+    q = query(collection(db, COL), orderBy("date","desc"), limit(PAGE));
+  }
+  if (!fresh && listLastDoc) {
+    if (filterCat) {
+      q = query(collection(db, COL),
+        where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+    } else {
+      q = query(collection(db, COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+    }
+  }
+
+  try {
+    const snap = await getDocs(q);
+    if (fresh) allListDocs = [];
+    snap.docs.forEach(d => allListDocs.push(d));
+    listLastDoc = snap.docs[snap.docs.length - 1];
+    listHasMore = snap.docs.length === PAGE;
+    document.getElementById("list-load-more").style.display = listHasMore ? "" : "none";
+    renderList();
+  } catch(e) {
+    document.getElementById("article-list").innerHTML =
+      `<div class="list-empty"><i class="ti ti-wifi-off"></i>Failed to load</div>`;
+  }
+}
+
+function renderList() {
+  const search = filterSearch.toLowerCase();
+  const filtered = search
+    ? allListDocs.filter(d => (d.data().title||"").toLowerCase().includes(search))
+    : allListDocs;
+
+  if (!filtered.length) {
+    document.getElementById("article-list").innerHTML =
+      `<div class="list-empty"><i class="ti ti-inbox"></i>No articles found</div>`;
+    return;
+  }
+
+  document.getElementById("article-list").innerHTML = filtered.map(d => {
+    const data = d.data();
+    const dotCls = data.importance === "high" ? "d-high" : data.importance === "medium" ? "d-med" : "d-low";
+    const dateStr = data.date?.toDate
+      ? data.date.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
+      : "";
+    return `
+      <div class="art-item" onclick="selectArticle('${d.id}')" id="item-${d.id}">
+        <div class="art-dot ${dotCls}"></div>
+        <div class="ai-tag t-${data.category||'tech'}" style="background:rgba(79,110,247,.1);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${(data.category||"").toUpperCase()}</div>
+        <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
+        <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr}<i class="ti ti-flame" style="margin-left:4px"></i>${data.importance||""}</div>
+      </div>`;
+  }).join("");
+}
+
+window.applyFilter = function() {
+  filterCat    = document.getElementById("filter-cat").value;
+  filterSearch = document.getElementById("filter-search").value.trim();
+  if (filterSearch) { renderList(); return; }
+  loadList(true);
+};
+
+window.listLoadMore = () => loadList(false);
+
+/* ── Select article ─────────────────────────────── */
+window.selectArticle = async function(id) {
+  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
+  document.getElementById("item-"+id)?.classList.add("selected");
+
+  editingId = id;
+  showEditor();
+  document.getElementById("editor-mode-label").textContent = "Edit Article";
+  document.getElementById("btn-delete").style.display = "";
+  clearForm();
+
+  try {
+    const snap = await getDoc(doc(db, COL, id));
+    if (!snap.exists()) return;
+    const d = snap.data();
+    document.getElementById("f-title").value    = d.title || "";
+    document.getElementById("f-category").value = d.category || "";
+    document.getElementById("f-importance").value = d.importance || "high";
+    document.getElementById("f-tags").value     = (d.tags||[]).join(", ");
+    if (d.date?.toDate) {
+      document.getElementById("f-date").value = d.date.toDate().toISOString().split("T")[0];
+    }
+    loadBlocksIntoBuilder(d.content || []);
+  } catch(e) { showToast("Failed to load article","error"); }
+};
+
+/* ── New article ────────────────────────────────── */
+window.newArticle = function() {
+  editingId = null;
+  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
+  showEditor();
+  document.getElementById("editor-mode-label").textContent = "New Article";
+  document.getElementById("btn-delete").style.display = "none";
+  clearForm();
+  document.getElementById("f-date").value = new Date().toISOString().split("T")[0];
+};
+
+function clearForm() {
+  ["f-title","f-tags"].forEach(id => document.getElementById(id).value = "");
+  document.getElementById("f-category").value  = "";
+  document.getElementById("f-importance").value = "high";
+  document.getElementById("cb-blocks").innerHTML =
+    `<div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">Add your first content block above</div>`;
+}
+
+function showEditor() {
+  document.getElementById("editor-placeholder").style.display = "none";
+  document.getElementById("editor-form").classList.add("visible");
+}
+
+window.cancelEdit = function() {
+  editingId = null;
+  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
+  document.getElementById("editor-form").classList.remove("visible");
+  document.getElementById("editor-placeholder").style.display = "flex";
+};
+
+/* ── Save ────────────────────────────────────────── */
+window.saveArticle = async function() {
+  const title    = document.getElementById("f-title").value.trim();
+  const category = document.getElementById("f-category").value;
+  const dateVal  = document.getElementById("f-date").value;
+
+  if (!title)    { showToast("Title is required","error"); return; }
+  if (!category) { showToast("Select a category","error"); return; }
+  if (!dateVal)  { showToast("Date is required","error"); return; }
+
+  const content    = collectBlocks();
+  const tags       = document.getElementById("f-tags").value.split(",").map(t=>t.trim()).filter(Boolean);
+  const importance = document.getElementById("f-importance").value;
+  const dateTs     = Timestamp.fromDate(new Date(dateVal));
+
+  const btn = document.getElementById("btn-save");
+  btn.disabled = true; btn.innerHTML = `<i class="ti ti-loader"></i> Saving…`;
+
+  const payload = { title, category, importance, date: dateTs, tags, content, updatedAt: serverTimestamp() };
+
+  try {
+    if (editingId) {
+      await updateDoc(doc(db, COL, editingId), payload);
+      showToast("Article updated ✓","success");
+    } else {
+      payload.createdAt = serverTimestamp();
+      const ref = await addDoc(collection(db, COL), payload);
+      editingId = ref.id;
+      document.getElementById("editor-mode-label").textContent = "Edit Article";
+      document.getElementById("btn-delete").style.display = "";
+      showToast("Article created ✓","success");
+    }
+    loadList(true);
+  } catch(e) {
+    showToast("Save failed: "+e.message,"error");
+  }
+  btn.disabled = false; btn.innerHTML = `<i class="ti ti-device-floppy"></i> Save`;
+};
+
+/* ── Delete ──────────────────────────────────────── */
+window.confirmDelete = function() {
+  document.getElementById("confirm-overlay").classList.add("open");
+};
+window.closeConfirm = function() {
+  document.getElementById("confirm-overlay").classList.remove("open");
+};
+window.doDelete = async function() {
+  closeConfirm();
+  if (!editingId) return;
+  try {
+    await deleteDoc(doc(db, COL, editingId));
+    showToast("Article deleted","success");
+    cancelEdit();
+    loadList(true);
+  } catch(e) { showToast("Delete failed","error"); }
+};
+
+/* ═══════════════════════════════════════════════
+   CONTENT BLOCK BUILDER
+   ═══════════════════════════════════════════════ */
+
+let blockId = 0;
+function uid() { return "blk-" + (++blockId); }
+
+/* ── Add a block ─────────────────────────────────── */
+window.addBlock = function(type) {
+  const container = document.getElementById("cb-blocks");
+  // Remove placeholder text if present
+  if (container.querySelector("div[style]")) container.innerHTML = "";
+
+  const id = uid();
+  let inner = "";
+
+  const typeLabel = {h2:"Heading 2",h3:"Heading 3",para:"Paragraph",
+    highlight:"Highlight / Key Fact",ul:"Bullet List",ol:"Numbered List",table:"Table"}[type];
+
+  if (type === "h2" || type === "h3") {
+    inner = `<input data-field="text" placeholder="Enter heading…" value=""/>`;
+  } else if (type === "para") {
+    inner = `<textarea data-field="text" rows="3" placeholder="Write paragraph… Use **bold** and *italic*"></textarea>`;
+  } else if (type === "highlight") {
+    inner = `<textarea data-field="text" rows="2" placeholder="Key fact or note… e.g. **Padma Vibhushan 2025:** …"></textarea>`;
+  } else if (type === "ul" || type === "ol") {
+    inner = `
+      <div data-list-items>
+        ${listItemRow("Item 1")}
+        ${listItemRow("Item 2")}
+      </div>
+      <button class="add-row-btn" onclick="addListItem('${id}')"><i class="ti ti-plus"></i> Add item</button>`;
+  } else if (type === "table") {
+    inner = `
+      <div data-table-wrap>
+        <div class="tbl-header-row" data-header-row>
+          <input class="tbl-cell" placeholder="Col 1" data-header/>
+          <input class="tbl-cell" placeholder="Col 2" data-header/>
+          <input class="tbl-cell" placeholder="Col 3" data-header/>
+          <button class="remove-row-btn" style="visibility:hidden"><i class="ti ti-trash"></i></button>
+        </div>
+        <div data-body-rows>
+          ${tableDataRow(3)}
+        </div>
+      </div>
+      <button class="add-row-btn" onclick="addTableRow('${id}')"><i class="ti ti-plus"></i> Add row</button>
+      <button class="add-col-btn" onclick="addTableCol('${id}')"><i class="ti ti-plus"></i> Add col</button>`;
+  }
+
+  const html = `
+    <div class="cb-block" data-type="${type}" id="${id}">
+      <div class="cb-block-hdr">
+        <span class="cb-block-type">${typeLabel}</span>
+        <div class="cb-block-actions">
+          <button class="cb-action" onclick="moveBlock('${id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
+          <button class="cb-action" onclick="moveBlock('${id}',1)" title="Move down"><i class="ti ti-arrow-down"></i></button>
+          <button class="cb-action del" onclick="removeBlock('${id}')" title="Remove"><i class="ti ti-trash"></i></button>
+        </div>
+      </div>
+      <div class="cb-block-body">${inner}</div>
+    </div>`;
+
+  container.insertAdjacentHTML("beforeend", html);
+};
+
+function listItemRow(val="") {
+  return `<div style="display:flex;gap:6px;margin-bottom:4px">
+    <input data-item class="tbl-cell" style="flex:1" placeholder="List item…" value="${escHtml(val)}"/>
+    <button class="remove-row-btn" onclick="this.closest('div').remove()"><i class="ti ti-x"></i></button>
+  </div>`;
+}
+function tableDataRow(cols=3, vals=[]) {
+  const cells = Array(cols).fill(0).map((_,i) =>
+    `<input class="tbl-cell" placeholder="Cell" data-cell value="${escHtml(vals[i]||"")}" />`).join("");
+  return `<div class="tbl-data-row">${cells}
+    <button class="remove-row-btn" onclick="this.closest('.tbl-data-row').remove()"><i class="ti ti-trash"></i></button>
+  </div>`;
+}
+
+window.addListItem = function(id) {
+  document.querySelector(`#${id} [data-list-items]`).insertAdjacentHTML("beforeend", listItemRow());
+};
+window.addTableRow = function(id) {
+  const cols = document.querySelectorAll(`#${id} [data-header]`).length;
+  document.querySelector(`#${id} [data-body-rows]`).insertAdjacentHTML("beforeend", tableDataRow(cols));
+};
+window.addTableCol = function(id) {
+  const hdrRow = document.querySelector(`#${id} [data-header-row]`);
+  const rmBtn  = hdrRow.querySelector(".remove-row-btn");
+  const inp    = document.createElement("input");
+  inp.className = "tbl-cell"; inp.placeholder = "New col"; inp.setAttribute("data-header","");
+  hdrRow.insertBefore(inp, rmBtn);
+  document.querySelectorAll(`#${id} .tbl-data-row`).forEach(row => {
+    const rmb = row.querySelector(".remove-row-btn");
+    const cell = document.createElement("input");
+    cell.className = "tbl-cell"; cell.placeholder = "Cell"; cell.setAttribute("data-cell","");
+    row.insertBefore(cell, rmb);
+  });
+};
+window.removeBlock = function(id) { document.getElementById(id)?.remove(); };
+window.moveBlock = function(id, dir) {
+  const el = document.getElementById(id);
+  const parent = el.parentNode;
+  if (dir === -1 && el.previousElementSibling) parent.insertBefore(el, el.previousElementSibling);
+  else if (dir === 1 && el.nextElementSibling) parent.insertBefore(el.nextElementSibling, el);
+};
+
+/* ── Collect blocks from DOM ────────────────────── */
+function collectBlocks() {
+  const blocks = [];
+  document.querySelectorAll("#cb-blocks .cb-block").forEach(blk => {
+    const type = blk.dataset.type;
+    if (type === "h2" || type === "h3" || type === "para" || type === "highlight") {
+      const el = blk.querySelector("[data-field='text']");
+      if (el) blocks.push({ type, text: el.value.trim() });
+    } else if (type === "ul" || type === "ol") {
+      const items = [...blk.querySelectorAll("[data-item]")].map(i=>i.value.trim()).filter(Boolean);
+      blocks.push({ type, items });
+    } else if (type === "table") {
+      const headers = [...blk.querySelectorAll("[data-header]")].map(i=>i.value.trim());
+      const rows    = [...blk.querySelectorAll(".tbl-data-row")].map(row =>
+        [...row.querySelectorAll("[data-cell]")].map(c=>c.value.trim()));
+      blocks.push({ type, headers, rows });
+    }
+  });
+  return blocks;
+}
+
+/* ── Load saved blocks into builder ─────────────── */
+function loadBlocksIntoBuilder(blocks) {
+  document.getElementById("cb-blocks").innerHTML = "";
+  blocks.forEach(b => {
+    addBlock(b.type);
+    const container = document.getElementById("cb-blocks");
+    const blk = container.lastElementChild;
+    if (!blk) return;
+    if (["h2","h3","para","highlight"].includes(b.type)) {
+      const el = blk.querySelector("[data-field='text']");
+      if (el) el.value = b.text || "";
+    } else if (["ul","ol"].includes(b.type)) {
+      const wrap = blk.querySelector("[data-list-items]");
+      if (wrap) { wrap.innerHTML = ""; (b.items||[]).forEach(i => wrap.insertAdjacentHTML("beforeend", listItemRow(i))); }
+    } else if (b.type === "table") {
+      // Rebuild columns
+      const hdrRow = blk.querySelector("[data-header-row]");
+      if (hdrRow) {
+        hdrRow.querySelectorAll("[data-header]").forEach(e=>e.remove());
+        const rmBtn = hdrRow.querySelector(".remove-row-btn");
+        (b.headers||[]).forEach(h => {
+          const inp = document.createElement("input");
+          inp.className = "tbl-cell"; inp.setAttribute("data-header",""); inp.value = h;
+          hdrRow.insertBefore(inp, rmBtn);
+        });
+      }
+      const bodyRows = blk.querySelector("[data-body-rows]");
+      if (bodyRows) {
+        bodyRows.innerHTML = "";
+        (b.rows||[]).forEach(row => bodyRows.insertAdjacentHTML("beforeend", tableDataRow((b.headers||[]).length, row)));
+      }
+    }
+  });
+  if (!blocks.length)
+    document.getElementById("cb-blocks").innerHTML =
+      `<div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">Add content blocks above</div>`;
+}
+
+/* ── Toast ───────────────────────────────────────── */
+function showToast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "show " + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = ""; }, 3000);
+}
+
+function escHtml(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+/* ── Expose globals ──────────────────────────────── */
+window.doLogin = window.doLogin;
+window.doLogout = window.doLogout;
+window.newArticle = window.newArticle;
+window.selectArticle = window.selectArticle;
+window.saveArticle = window.saveArticle;
+window.cancelEdit = window.cancelEdit;
+window.confirmDelete = window.confirmDelete;
+window.closeConfirm = window.closeConfirm;
+window.doDelete = window.doDelete;
+window.applyFilter = window.applyFilter;
+window.listLoadMore = window.listLoadMore;
+window.addBlock = window.addBlock;
+window.removeBlock = window.removeBlock;
+window.moveBlock = window.moveBlock;
+window.addListItem = window.addListItem;
+window.addTableRow = window.addTableRow;
+window.addTableCol = window.addTableCol;
+</script>
+</body>
+</html>
