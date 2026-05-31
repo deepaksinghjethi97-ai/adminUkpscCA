@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +22,7 @@ html,body{background:var(--bg);color:var(--text);font-family:var(--font);min-hei
 button{font-family:var(--font);cursor:pointer}
 input,select,textarea{font-family:var(--font)}
 
-/* ── LOGIN SCREEN ─────────────────────────────── */
+/* ── LOGIN ─────────────────────────────────────── */
 #login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999}
 .login-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:36px;width:100%;max-width:360px}
 .login-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
@@ -42,11 +43,11 @@ input,select,textarea{font-family:var(--font)}
 .login-divider::before,.login-divider::after{content:"";flex:1;height:1px;background:var(--border)}
 .login-divider span{font-size:10.5px;color:var(--text3);white-space:nowrap}
 
-/* ── APP SHELL ────────────────────────────────── */
+/* ── APP SHELL ─────────────────────────────────── */
 #app{display:none;height:100vh;flex-direction:column}
 #app.visible{display:flex}
 
-/* ── HEADER ───────────────────────────────────── */
+/* ── HEADER ────────────────────────────────────── */
 #hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;flex-shrink:0}
 .hdr-left{display:flex;align-items:center;gap:10px}
 .hdr-badge{background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:8px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff}
@@ -57,10 +58,10 @@ input,select,textarea{font-family:var(--font)}
 .btn-outline{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text2);font-size:12px;transition:.15s;display:flex;align-items:center;gap:6px}
 .btn-outline:hover{border-color:var(--border2);color:var(--text)}
 
-/* ── BODY ─────────────────────────────────────── */
+/* ── BODY ──────────────────────────────────────── */
 #body{display:flex;flex:1;overflow:hidden}
 
-/* ── LEFT PANEL (article list) ────────────────── */
+/* ── LEFT PANEL ────────────────────────────────── */
 #left-panel{width:340px;min-width:340px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .panel-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .panel-hdr h3{font-size:13px;font-weight:600}
@@ -80,22 +81,20 @@ input,select,textarea{font-family:var(--font)}
 .art-item .ai-meta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:7px}
 .art-item .ai-meta i{font-size:11px}
 .art-dot{position:absolute;top:12px;right:12px;width:6px;height:6px;border-radius:50%}
-.d-high{background:var(--red)}
-.d-med{background:var(--amber)}
-.d-low{background:var(--green)}
+.d-high{background:var(--red)}.d-med{background:var(--amber)}.d-low{background:var(--green)}
 .list-empty{padding:32px;text-align:center;color:var(--text3);font-size:13px}
 .list-empty i{font-size:32px;display:block;margin-bottom:8px;opacity:.4}
 .list-load-more{padding:12px;text-align:center}
 .list-load-more button{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:7px 18px;color:var(--text2);font-size:12px;transition:.15s}
 .list-load-more button:hover{color:var(--text);border-color:var(--border2)}
 
-/* ── RIGHT PANEL (editor) ─────────────────────── */
+/* ── RIGHT PANEL ───────────────────────────────── */
 #right-panel{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
 .editor-placeholder{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;color:var(--text3);gap:10px}
 .editor-placeholder i{font-size:44px;opacity:.3}
 .editor-placeholder p{font-size:13px}
 
-/* ── EDITOR FORM ──────────────────────────────── */
+/* ── EDITOR FORM ───────────────────────────────── */
 #editor-form{display:none;flex-direction:column;height:100%}
 #editor-form.visible{display:flex}
 .editor-bar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2)}
@@ -105,6 +104,8 @@ input,select,textarea{font-family:var(--font)}
 .btn-save{background:var(--green);border:none;border-radius:8px;padding:7px 18px;color:#0d1a12;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;transition:.15s}
 .btn-save:hover{filter:brightness(1.1)}
 .btn-save:disabled{opacity:.5;cursor:not-allowed}
+.btn-preview{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 14px;color:var(--teal);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-preview:hover{background:var(--bg4);border-color:var(--teal)}
 .btn-delete{background:rgba(247,90,124,.1);border:1px solid rgba(247,90,124,.3);border-radius:8px;padding:7px 14px;color:var(--red);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
 .btn-delete:hover{background:rgba(247,90,124,.2)}
 .btn-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text2);font-size:12.5px;transition:.15s}
@@ -119,14 +120,13 @@ input,select,textarea{font-family:var(--font)}
 .form-group label .req{color:var(--red);margin-left:2px}
 .form-group input,.form-group select,.form-group textarea{
   background:var(--bg2);border:1px solid var(--border);border-radius:8px;
-  padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:.15s;
-  width:100%;
+  padding:9px 12px;color:var(--text);font-size:13px;outline:none;transition:.15s;width:100%;
 }
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
 .form-group select option{background:var(--bg2)}
 .form-group textarea{resize:vertical;min-height:70px;line-height:1.6}
 
-/* ── RICH TEXT CONTENT BUILDER ────────────────── */
+/* ── CONTENT BUILDER ───────────────────────────── */
 .content-builder{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
 .cb-toolbar{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .cb-toolbar-label{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.5px;margin-right:4px}
@@ -134,6 +134,7 @@ input,select,textarea{font-family:var(--font)}
 .cb-btn:hover{color:var(--text);border-color:var(--border2)}
 .cb-btn i{font-size:13px}
 .cb-blocks{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:120px}
+.cb-empty{text-align:center;color:var(--text3);font-size:12px;padding:24px 16px;pointer-events:none}
 .cb-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
 .cb-block-hdr{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
 .cb-block-type{font-size:9px;font-weight:700;letter-spacing:.8px;color:var(--accent);text-transform:uppercase;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);border-radius:4px;padding:2px 6px}
@@ -142,29 +143,29 @@ input,select,textarea{font-family:var(--font)}
 .cb-action:hover{color:var(--text);background:var(--bg4)}
 .cb-action.del:hover{color:var(--red)}
 .cb-block-body{padding:10px 12px}
-.cb-block-body textarea,.cb-block-body input{
+.cb-block-body textarea,.cb-block-body input[data-field]{
   width:100%;background:var(--bg2);border:1px solid var(--border);
   border-radius:7px;padding:7px 10px;color:var(--text);font-size:12.5px;
   outline:none;transition:.15s;resize:vertical;line-height:1.6;
 }
-.cb-block-body textarea:focus,.cb-block-body input:focus{border-color:var(--accent)}
-.cb-hint{font-size:10px;color:var(--text3);margin-top:4px}
-/* table block */
-.tbl-header-row,.tbl-data-row{display:flex;gap:6px;margin-bottom:6px}
-.tbl-cell{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none}
+.cb-block-body textarea:focus,.cb-block-body input[data-field]:focus{border-color:var(--accent)}
+/* table/list */
+.tbl-header-row,.tbl-data-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.tbl-cell{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;min-width:0}
 .tbl-cell:focus{border-color:var(--accent)}
-.add-row-btn,.add-col-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text3);font-size:11px;transition:.15s;margin-top:2px;margin-right:4px}
+.add-row-btn,.add-col-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text3);font-size:11px;transition:.15s;margin-top:4px;margin-right:4px}
 .add-row-btn:hover,.add-col-btn:hover{color:var(--text);border-color:var(--border2)}
-.remove-row-btn{background:transparent;border:none;color:var(--text3);font-size:14px;padding:2px 4px;cursor:pointer;transition:.15s;flex-shrink:0}
+.remove-row-btn{background:transparent;border:none;color:var(--text3);font-size:14px;padding:2px 5px;cursor:pointer;transition:.15s;flex-shrink:0}
 .remove-row-btn:hover{color:var(--red)}
+.list-item-row{display:flex;gap:6px;margin-bottom:4px;align-items:center}
 
-/* ── TOAST ────────────────────────────────────── */
-#toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 4px 24px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:.3s;z-index:999;display:flex;align-items:center;gap:8px}
+/* ── TOAST ─────────────────────────────────────── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 4px 24px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:.3s;z-index:1200;display:flex;align-items:center;gap:8px}
 #toast.show{transform:translateY(0);opacity:1}
 #toast.success{border-color:rgba(61,224,160,.3);color:var(--green)}
 #toast.error{border-color:rgba(247,90,124,.3);color:var(--red)}
 
-/* ── CONFIRM DIALOG ───────────────────────────── */
+/* ── CONFIRM DIALOG ────────────────────────────── */
 #confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
 #confirm-overlay.open{display:flex}
 .confirm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;max-width:360px;width:100%;text-align:center}
@@ -175,7 +176,35 @@ input,select,textarea{font-family:var(--font)}
 .btn-confirm-del{background:var(--red);border:none;border-radius:8px;padding:8px 20px;color:#fff;font-weight:600;font-size:13px}
 .btn-confirm-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 20px;color:var(--text2);font-size:13px}
 
-/* ── RESPONSIVE ───────────────────────────────── */
+/* ── PREVIEW MODAL ─────────────────────────────── */
+#preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
+#preview-overlay.open{display:flex}
+.preview-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);width:100%;max-width:760px;overflow:hidden;margin:auto}
+.preview-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg3)}
+.preview-hdr h3{font-size:13px;font-weight:600;color:var(--text2)}
+.preview-close{background:transparent;border:none;color:var(--text3);font-size:20px;padding:2px 6px;border-radius:6px;transition:.15s}
+.preview-close:hover{color:var(--red);background:rgba(247,90,124,.1)}
+.preview-meta{padding:16px 24px 0;border-bottom:1px solid var(--border);padding-bottom:14px}
+.preview-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;background:rgba(79,110,247,.15);color:#7c9af7;border:1px solid rgba(79,110,247,.25)}
+.preview-title{font-size:20px;font-weight:700;line-height:1.4;margin-bottom:8px}
+.preview-info{display:flex;gap:14px;font-size:11px;color:var(--text3)}
+.preview-info span{display:flex;align-items:center;gap:4px}
+.preview-body{padding:20px 24px}
+/* rich content styles inside preview */
+.rich-content h2{font-size:16px;font-weight:700;color:var(--text);margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.rich-content h2:first-child{margin-top:0}
+.rich-content h3{font-size:14px;font-weight:600;color:var(--accent);margin:16px 0 6px}
+.rich-content p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:10px}
+.rich-content .highlight{background:rgba(79,110,247,.07);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0}
+.rich-content .highlight p{margin:0;color:var(--text)}
+.rich-content ul,.rich-content ol{padding-left:20px;margin:8px 0 12px}
+.rich-content li{font-size:13px;color:var(--text2);margin-bottom:4px;line-height:1.7}
+.rich-content table{width:100%;border-collapse:collapse;margin:10px 0 14px;font-size:12.5px}
+.rich-content th{background:var(--bg3);color:var(--text);padding:8px 12px;text-align:left;border:1px solid var(--border);font-weight:600}
+.rich-content td{padding:7px 12px;border:1px solid var(--border);color:var(--text2)}
+.rich-content tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+
+/* ── RESPONSIVE ────────────────────────────────── */
 @media(max-width:900px){
   #left-panel{width:100%;min-width:unset;position:fixed;left:0;top:56px;bottom:0;z-index:90;transform:translateX(-100%);transition:.25s}
   #left-panel.open{transform:translateX(0)}
@@ -217,7 +246,6 @@ input,select,textarea{font-family:var(--font)}
 
 <!-- ══════════ APP ══════════ -->
 <div id="app">
-  <!-- HEADER -->
   <div id="hdr">
     <div class="hdr-left">
       <div class="hdr-badge">CA</div>
@@ -234,7 +262,6 @@ input,select,textarea{font-family:var(--font)}
     </div>
   </div>
 
-  <!-- BODY -->
   <div id="body">
     <!-- LEFT: article list -->
     <div id="left-panel">
@@ -304,12 +331,12 @@ input,select,textarea{font-family:var(--font)}
           </div>
           <div class="editor-bar-right">
             <button class="btn-cancel" onclick="cancelEdit()"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn-preview" onclick="openPreview()"><i class="ti ti-eye"></i> Preview</button>
             <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none"><i class="ti ti-trash"></i> Delete</button>
             <button class="btn-save" id="btn-save" onclick="saveArticle()"><i class="ti ti-device-floppy"></i> Save</button>
           </div>
         </div>
         <div class="editor-scroll">
-          <!-- Meta fields -->
           <div class="form-row full">
             <div class="form-group">
               <label>Title <span class="req">*</span></label>
@@ -378,8 +405,6 @@ input,select,textarea{font-family:var(--font)}
               <input id="f-tags" placeholder="e.g. ISRO, missile, 2024"/>
             </div>
           </div>
-
-          <!-- Rich text content builder -->
           <div class="form-group" style="margin-bottom:6px">
             <label>Article Content <span class="req">*</span></label>
           </div>
@@ -395,9 +420,7 @@ input,select,textarea{font-family:var(--font)}
               <button class="cb-btn" onclick="addBlock('table')"><i class="ti ti-table"></i> Table</button>
             </div>
             <div class="cb-blocks" id="cb-blocks">
-              <div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">
-                Click a button above to add your first content block
-              </div>
+              <div class="cb-empty">Click a button above to add your first content block</div>
             </div>
           </div>
           <div style="height:24px"></div>
@@ -423,19 +446,39 @@ input,select,textarea{font-family:var(--font)}
   </div>
 </div>
 
-<!-- ══════════ FIREBASE + ADMIN SCRIPT ══════════ -->
+<!-- ══════════ PREVIEW MODAL ══════════ -->
+<div id="preview-overlay" onclick="if(event.target===this)closePreview()">
+  <div class="preview-card">
+    <div class="preview-hdr">
+      <h3><i class="ti ti-eye" style="margin-right:6px"></i>Article Preview</h3>
+      <button class="preview-close" onclick="closePreview()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="preview-meta">
+      <div class="preview-tag" id="pv-tag"></div>
+      <div class="preview-title" id="pv-title"></div>
+      <div class="preview-info">
+        <span><i class="ti ti-calendar"></i> <span id="pv-date"></span></span>
+        <span><i class="ti ti-flame"></i> <span id="pv-imp"></span></span>
+        <span><i class="ti ti-tag"></i> <span id="pv-tags"></span></span>
+      </div>
+    </div>
+    <div class="preview-body rich-content" id="pv-body"></div>
+  </div>
+</div>
+
+<!-- ══════════ FIREBASE + SCRIPT ══════════ -->
 <script type="module">
-import { initializeApp }       from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
          GoogleAuthProvider, signInWithPopup }
-                               from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
+  from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import {
   getFirestore, collection, query, where, orderBy, limit,
   startAfter, getDocs, getDoc, addDoc, updateDoc, deleteDoc,
   doc, Timestamp, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-/* ── Firebase init ─────────────────────────────── */
+/* ── Firebase init ───────────────────────────────── */
 const app = initializeApp({
   apiKey:"AIzaSyD-U-2tLzpoG1sWuWpsE8TUt74zqAou9UI",
   authDomain:"current-e1fcd.firebaseapp.com",
@@ -449,16 +492,16 @@ const db   = getFirestore(app);
 const COL  = "articles";
 const PAGE = 20;
 
-/* ── State ─────────────────────────────────────── */
-let editingId       = null;   // null = new article
-let listLastDoc     = null;
-let listHasMore     = false;
-let filterCat       = "";
-let filterSearch    = "";
-let confirmCallback = null;
-let allListDocs     = [];     // local cache for search
+/* ── State ───────────────────────────────────────── */
+let editingId    = null;
+let listLastDoc  = null;
+let filterCat    = "";
+let filterSearch = "";
+let allListDocs  = [];
 
-/* ── Auth ───────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   AUTH
+══════════════════════════════════════════════════ */
 onAuthStateChanged(auth, user => {
   if (user) {
     document.getElementById("login-screen").style.display = "none";
@@ -487,8 +530,6 @@ window.doLogin = async function() {
   }
 };
 
-window.doLogout = () => signOut(auth);
-
 window.doGoogleLogin = async function() {
   const btn = document.getElementById("google-btn");
   const err = document.getElementById("login-err");
@@ -496,48 +537,45 @@ window.doGoogleLogin = async function() {
   btn.disabled = true;
   btn.innerHTML = `<span style="opacity:.7">Signing in…</span>`;
   try {
-    const provider = new GoogleAuthProvider();
-    await signInWithPopup(auth, provider);
+    await signInWithPopup(auth, new GoogleAuthProvider());
   } catch(e) {
-    err.textContent = e.code === "auth/popup-closed-by-user"
-      ? "Sign-in cancelled." : "Google sign-in failed. Try again.";
+    err.textContent = e.code === "auth/popup-closed-by-user" ? "Sign-in cancelled." : "Google sign-in failed. Try again.";
     err.style.display = "block";
     btn.disabled = false;
     btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 48 48" style="flex-shrink:0"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google`;
   }
 };
 
-/* ── List ───────────────────────────────────────── */
+window.doLogout = () => signOut(auth);
+
+/* ══════════════════════════════════════════════════
+   ARTICLE LIST
+══════════════════════════════════════════════════ */
 async function loadList(fresh = false) {
   if (fresh) { listLastDoc = null; allListDocs = []; }
-
   let q;
   if (filterCat) {
-    q = query(collection(db, COL),
-      where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+    q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
   } else {
-    q = query(collection(db, COL), orderBy("date","desc"), limit(PAGE));
+    q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
   }
   if (!fresh && listLastDoc) {
     if (filterCat) {
-      q = query(collection(db, COL),
-        where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+      q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
     } else {
-      q = query(collection(db, COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+      q = query(collection(db,COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
     }
   }
-
   try {
     const snap = await getDocs(q);
     if (fresh) allListDocs = [];
     snap.docs.forEach(d => allListDocs.push(d));
-    listLastDoc = snap.docs[snap.docs.length - 1];
-    listHasMore = snap.docs.length === PAGE;
-    document.getElementById("list-load-more").style.display = listHasMore ? "" : "none";
+    listLastDoc = snap.docs[snap.docs.length-1];
+    document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
     renderList();
   } catch(e) {
     document.getElementById("article-list").innerHTML =
-      `<div class="list-empty"><i class="ti ti-wifi-off"></i>Failed to load</div>`;
+      `<div class="list-empty"><i class="ti ti-wifi-off"></i><p>Failed to load</p></div>`;
   }
 }
 
@@ -546,26 +584,23 @@ function renderList() {
   const filtered = search
     ? allListDocs.filter(d => (d.data().title||"").toLowerCase().includes(search))
     : allListDocs;
-
   if (!filtered.length) {
     document.getElementById("article-list").innerHTML =
-      `<div class="list-empty"><i class="ti ti-inbox"></i>No articles found</div>`;
+      `<div class="list-empty"><i class="ti ti-inbox"></i><p>No articles found</p></div>`;
     return;
   }
-
   document.getElementById("article-list").innerHTML = filtered.map(d => {
     const data = d.data();
-    const dotCls = data.importance === "high" ? "d-high" : data.importance === "medium" ? "d-med" : "d-low";
+    const dotCls = data.importance==="high" ? "d-high" : data.importance==="medium" ? "d-med" : "d-low";
     const dateStr = data.date?.toDate
       ? data.date.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
       : "";
-    return `
-      <div class="art-item" onclick="selectArticle('${d.id}')" id="item-${d.id}">
-        <div class="art-dot ${dotCls}"></div>
-        <div class="ai-tag t-${data.category||'tech'}" style="background:rgba(79,110,247,.1);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${(data.category||"").toUpperCase()}</div>
-        <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
-        <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr}<i class="ti ti-flame" style="margin-left:4px"></i>${data.importance||""}</div>
-      </div>`;
+    return `<div class="art-item" onclick="selectArticle('${d.id}')" id="item-${d.id}">
+      <div class="art-dot ${dotCls}"></div>
+      <div class="ai-tag" style="background:rgba(79,110,247,.1);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${(data.category||"").toUpperCase()}</div>
+      <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
+      <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr}<i class="ti ti-flame" style="margin-left:4px"></i>${data.importance||""}</div>
+    </div>`;
   }).join("");
 }
 
@@ -575,28 +610,27 @@ window.applyFilter = function() {
   if (filterSearch) { renderList(); return; }
   loadList(true);
 };
-
 window.listLoadMore = () => loadList(false);
 
-/* ── Select article ─────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   EDITOR — OPEN / CLOSE
+══════════════════════════════════════════════════ */
 window.selectArticle = async function(id) {
   document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
   document.getElementById("item-"+id)?.classList.add("selected");
-
   editingId = id;
   showEditor();
   document.getElementById("editor-mode-label").textContent = "Edit Article";
   document.getElementById("btn-delete").style.display = "";
   clearForm();
-
   try {
-    const snap = await getDoc(doc(db, COL, id));
+    const snap = await getDoc(doc(db,COL,id));
     if (!snap.exists()) return;
     const d = snap.data();
-    document.getElementById("f-title").value    = d.title || "";
-    document.getElementById("f-category").value = d.category || "";
+    document.getElementById("f-title").value      = d.title || "";
+    document.getElementById("f-category").value   = d.category || "";
     document.getElementById("f-importance").value = d.importance || "high";
-    document.getElementById("f-tags").value     = (d.tags||[]).join(", ");
+    document.getElementById("f-tags").value        = (d.tags||[]).join(", ");
     if (d.date?.toDate) {
       document.getElementById("f-date").value = d.date.toDate().toISOString().split("T")[0];
     }
@@ -604,7 +638,6 @@ window.selectArticle = async function(id) {
   } catch(e) { showToast("Failed to load article","error"); }
 };
 
-/* ── New article ────────────────────────────────── */
 window.newArticle = function() {
   editingId = null;
   document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
@@ -616,11 +649,12 @@ window.newArticle = function() {
 };
 
 function clearForm() {
-  ["f-title","f-tags"].forEach(id => document.getElementById(id).value = "");
-  document.getElementById("f-category").value  = "";
+  document.getElementById("f-title").value      = "";
+  document.getElementById("f-tags").value        = "";
+  document.getElementById("f-category").value   = "";
   document.getElementById("f-importance").value = "high";
-  document.getElementById("cb-blocks").innerHTML =
-    `<div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">Add your first content block above</div>`;
+  document.getElementById("f-date").value        = "";
+  resetBlocksPlaceholder();
 }
 
 function showEditor() {
@@ -632,15 +666,16 @@ window.cancelEdit = function() {
   editingId = null;
   document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
   document.getElementById("editor-form").classList.remove("visible");
-  document.getElementById("editor-placeholder").style.display = "flex";
+  document.getElementById("editor-placeholder").style.display = "";
 };
 
-/* ── Save ────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════
+   EDITOR — SAVE / DELETE
+══════════════════════════════════════════════════ */
 window.saveArticle = async function() {
   const title    = document.getElementById("f-title").value.trim();
   const category = document.getElementById("f-category").value;
   const dateVal  = document.getElementById("f-date").value;
-
   if (!title)    { showToast("Title is required","error"); return; }
   if (!category) { showToast("Select a category","error"); return; }
   if (!dateVal)  { showToast("Date is required","error"); return; }
@@ -649,123 +684,147 @@ window.saveArticle = async function() {
   const tags       = document.getElementById("f-tags").value.split(",").map(t=>t.trim()).filter(Boolean);
   const importance = document.getElementById("f-importance").value;
   const dateTs     = Timestamp.fromDate(new Date(dateVal));
-
-  const btn = document.getElementById("btn-save");
+  const btn        = document.getElementById("btn-save");
   btn.disabled = true; btn.innerHTML = `<i class="ti ti-loader"></i> Saving…`;
 
-  const payload = { title, category, importance, date: dateTs, tags, content, updatedAt: serverTimestamp() };
-
+  const payload = { title, category, importance, date:dateTs, tags, content, updatedAt:serverTimestamp() };
   try {
     if (editingId) {
-      await updateDoc(doc(db, COL, editingId), payload);
+      await updateDoc(doc(db,COL,editingId), payload);
       showToast("Article updated ✓","success");
     } else {
       payload.createdAt = serverTimestamp();
-      const ref = await addDoc(collection(db, COL), payload);
+      const ref = await addDoc(collection(db,COL), payload);
       editingId = ref.id;
       document.getElementById("editor-mode-label").textContent = "Edit Article";
       document.getElementById("btn-delete").style.display = "";
       showToast("Article created ✓","success");
     }
     loadList(true);
-  } catch(e) {
-    showToast("Save failed: "+e.message,"error");
-  }
+  } catch(e) { showToast("Save failed: "+e.message,"error"); }
   btn.disabled = false; btn.innerHTML = `<i class="ti ti-device-floppy"></i> Save`;
 };
 
-/* ── Delete ──────────────────────────────────────── */
-window.confirmDelete = function() {
-  document.getElementById("confirm-overlay").classList.add("open");
-};
-window.closeConfirm = function() {
-  document.getElementById("confirm-overlay").classList.remove("open");
-};
+window.confirmDelete = function() { document.getElementById("confirm-overlay").classList.add("open"); };
+window.closeConfirm  = function() { document.getElementById("confirm-overlay").classList.remove("open"); };
 window.doDelete = async function() {
   closeConfirm();
   if (!editingId) return;
   try {
-    await deleteDoc(doc(db, COL, editingId));
+    await deleteDoc(doc(db,COL,editingId));
     showToast("Article deleted","success");
     cancelEdit();
     loadList(true);
   } catch(e) { showToast("Delete failed","error"); }
 };
 
-/* ═══════════════════════════════════════════════
-   CONTENT BLOCK BUILDER
-   ═══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════
+   PREVIEW
+══════════════════════════════════════════════════ */
+window.openPreview = function() {
+  const title    = document.getElementById("f-title").value.trim() || "Untitled";
+  const category = document.getElementById("f-category").value || "—";
+  const dateVal  = document.getElementById("f-date").value;
+  const imp      = document.getElementById("f-importance").value;
+  const tags     = document.getElementById("f-tags").value;
+  const blocks   = collectBlocks();
 
+  const dateStr = dateVal
+    ? new Date(dateVal).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
+    : "—";
+  const impLabel = {high:"🔴 High",medium:"🟡 Medium",low:"🟢 Low"}[imp] || imp;
+
+  document.getElementById("pv-tag").textContent   = category.toUpperCase();
+  document.getElementById("pv-title").textContent = title;
+  document.getElementById("pv-date").textContent  = dateStr;
+  document.getElementById("pv-imp").textContent   = impLabel;
+  document.getElementById("pv-tags").textContent  = tags || "—";
+  document.getElementById("pv-body").innerHTML    = renderRichContent(blocks);
+
+  document.getElementById("preview-overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+};
+
+window.closePreview = function() {
+  document.getElementById("preview-overlay").classList.remove("open");
+  document.body.style.overflow = "";
+};
+
+document.addEventListener("keydown", e => { if(e.key==="Escape") closePreview(); });
+
+/* ══════════════════════════════════════════════════
+   CONTENT BLOCK BUILDER
+══════════════════════════════════════════════════ */
 let blockId = 0;
 function uid() { return "blk-" + (++blockId); }
 
-/* ── Add a block ─────────────────────────────────── */
-window.addBlock = function(type) {
+function resetBlocksPlaceholder() {
+  document.getElementById("cb-blocks").innerHTML =
+    `<div class="cb-empty">Click a button above to add your first content block</div>`;
+}
+
+function clearPlaceholder() {
   const container = document.getElementById("cb-blocks");
-  // Remove placeholder text if present
-  if (container.querySelector("div[style]")) container.innerHTML = "";
+  const empty = container.querySelector(".cb-empty");
+  if (empty) empty.remove();
+}
 
+window.addBlock = function(type) {
+  clearPlaceholder();   /* ← FIX: only removes .cb-empty, never touches real blocks */
   const id = uid();
-  let inner = "";
-
   const typeLabel = {h2:"Heading 2",h3:"Heading 3",para:"Paragraph",
     highlight:"Highlight / Key Fact",ul:"Bullet List",ol:"Numbered List",table:"Table"}[type];
 
+  let inner = "";
   if (type === "h2" || type === "h3") {
-    inner = `<input data-field="text" placeholder="Enter heading…" value=""/>`;
+    inner = `<input data-field="text" placeholder="Enter heading…"/>`;
   } else if (type === "para") {
     inner = `<textarea data-field="text" rows="3" placeholder="Write paragraph… Use **bold** and *italic*"></textarea>`;
   } else if (type === "highlight") {
     inner = `<textarea data-field="text" rows="2" placeholder="Key fact or note… e.g. **Padma Vibhushan 2025:** …"></textarea>`;
   } else if (type === "ul" || type === "ol") {
-    inner = `
-      <div data-list-items>
-        ${listItemRow("Item 1")}
-        ${listItemRow("Item 2")}
+    inner = `<div data-list-items>
+        ${listItemRow("Item 1")}${listItemRow("Item 2")}
       </div>
       <button class="add-row-btn" onclick="addListItem('${id}')"><i class="ti ti-plus"></i> Add item</button>`;
   } else if (type === "table") {
-    inner = `
-      <div data-table-wrap>
+    inner = `<div data-table-wrap>
         <div class="tbl-header-row" data-header-row>
           <input class="tbl-cell" placeholder="Col 1" data-header/>
           <input class="tbl-cell" placeholder="Col 2" data-header/>
           <input class="tbl-cell" placeholder="Col 3" data-header/>
           <button class="remove-row-btn" style="visibility:hidden"><i class="ti ti-trash"></i></button>
         </div>
-        <div data-body-rows>
-          ${tableDataRow(3)}
-        </div>
+        <div data-body-rows>${tableDataRow(3)}</div>
       </div>
       <button class="add-row-btn" onclick="addTableRow('${id}')"><i class="ti ti-plus"></i> Add row</button>
       <button class="add-col-btn" onclick="addTableCol('${id}')"><i class="ti ti-plus"></i> Add col</button>`;
   }
 
-  const html = `
+  document.getElementById("cb-blocks").insertAdjacentHTML("beforeend", `
     <div class="cb-block" data-type="${type}" id="${id}">
       <div class="cb-block-hdr">
         <span class="cb-block-type">${typeLabel}</span>
         <div class="cb-block-actions">
           <button class="cb-action" onclick="moveBlock('${id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
-          <button class="cb-action" onclick="moveBlock('${id}',1)" title="Move down"><i class="ti ti-arrow-down"></i></button>
+          <button class="cb-action" onclick="moveBlock('${id}',1)"  title="Move down"><i class="ti ti-arrow-down"></i></button>
           <button class="cb-action del" onclick="removeBlock('${id}')" title="Remove"><i class="ti ti-trash"></i></button>
         </div>
       </div>
       <div class="cb-block-body">${inner}</div>
-    </div>`;
-
-  container.insertAdjacentHTML("beforeend", html);
+    </div>`);
 };
 
 function listItemRow(val="") {
-  return `<div style="display:flex;gap:6px;margin-bottom:4px">
+  return `<div class="list-item-row">
     <input data-item class="tbl-cell" style="flex:1" placeholder="List item…" value="${escHtml(val)}"/>
-    <button class="remove-row-btn" onclick="this.closest('div').remove()"><i class="ti ti-x"></i></button>
+    <button class="remove-row-btn" onclick="this.closest('.list-item-row').remove()"><i class="ti ti-x"></i></button>
   </div>`;
 }
+
 function tableDataRow(cols=3, vals=[]) {
-  const cells = Array(cols).fill(0).map((_,i) =>
-    `<input class="tbl-cell" placeholder="Cell" data-cell value="${escHtml(vals[i]||"")}" />`).join("");
+  const cells = Array.from({length:cols},(_,i) =>
+    `<input class="tbl-cell" placeholder="Cell" data-cell value="${escHtml(vals[i]||"")}"/>`).join("");
   return `<div class="tbl-data-row">${cells}
     <button class="remove-row-btn" onclick="this.closest('.tbl-data-row').remove()"><i class="ti ti-trash"></i></button>
   </div>`;
@@ -785,32 +844,36 @@ window.addTableCol = function(id) {
   inp.className = "tbl-cell"; inp.placeholder = "New col"; inp.setAttribute("data-header","");
   hdrRow.insertBefore(inp, rmBtn);
   document.querySelectorAll(`#${id} .tbl-data-row`).forEach(row => {
-    const rmb = row.querySelector(".remove-row-btn");
+    const rmb  = row.querySelector(".remove-row-btn");
     const cell = document.createElement("input");
     cell.className = "tbl-cell"; cell.placeholder = "Cell"; cell.setAttribute("data-cell","");
     row.insertBefore(cell, rmb);
   });
 };
-window.removeBlock = function(id) { document.getElementById(id)?.remove(); };
+window.removeBlock = function(id) {
+  document.getElementById(id)?.remove();
+  /* show placeholder if no blocks left */
+  if (!document.querySelector("#cb-blocks .cb-block")) resetBlocksPlaceholder();
+};
 window.moveBlock = function(id, dir) {
   const el = document.getElementById(id);
   const parent = el.parentNode;
-  if (dir === -1 && el.previousElementSibling) parent.insertBefore(el, el.previousElementSibling);
-  else if (dir === 1 && el.nextElementSibling) parent.insertBefore(el.nextElementSibling, el);
+  if (dir===-1 && el.previousElementSibling) parent.insertBefore(el, el.previousElementSibling);
+  else if (dir===1 && el.nextElementSibling)  parent.insertBefore(el.nextElementSibling, el);
 };
 
-/* ── Collect blocks from DOM ────────────────────── */
+/* ── Collect blocks ──────────────────────────────── */
 function collectBlocks() {
   const blocks = [];
   document.querySelectorAll("#cb-blocks .cb-block").forEach(blk => {
     const type = blk.dataset.type;
-    if (type === "h2" || type === "h3" || type === "para" || type === "highlight") {
+    if (["h2","h3","para","highlight"].includes(type)) {
       const el = blk.querySelector("[data-field='text']");
       if (el) blocks.push({ type, text: el.value.trim() });
-    } else if (type === "ul" || type === "ol") {
+    } else if (type==="ul" || type==="ol") {
       const items = [...blk.querySelectorAll("[data-item]")].map(i=>i.value.trim()).filter(Boolean);
       blocks.push({ type, items });
-    } else if (type === "table") {
+    } else if (type==="table") {
       const headers = [...blk.querySelectorAll("[data-header]")].map(i=>i.value.trim());
       const rows    = [...blk.querySelectorAll(".tbl-data-row")].map(row =>
         [...row.querySelectorAll("[data-cell]")].map(c=>c.value.trim()));
@@ -820,75 +883,93 @@ function collectBlocks() {
   return blocks;
 }
 
-/* ── Load saved blocks into builder ─────────────── */
+/* ── Load saved blocks ───────────────────────────── */
 function loadBlocksIntoBuilder(blocks) {
+  /* clear container directly — don't call resetBlocksPlaceholder which would show placeholder */
   document.getElementById("cb-blocks").innerHTML = "";
+
+  if (!blocks.length) { resetBlocksPlaceholder(); return; }
+
   blocks.forEach(b => {
+    /* addBlock calls clearPlaceholder (safe) then appends */
     addBlock(b.type);
-    const container = document.getElementById("cb-blocks");
-    const blk = container.lastElementChild;
+    const blk = document.getElementById("cb-blocks").lastElementChild;
     if (!blk) return;
+
     if (["h2","h3","para","highlight"].includes(b.type)) {
       const el = blk.querySelector("[data-field='text']");
       if (el) el.value = b.text || "";
+
     } else if (["ul","ol"].includes(b.type)) {
       const wrap = blk.querySelector("[data-list-items]");
-      if (wrap) { wrap.innerHTML = ""; (b.items||[]).forEach(i => wrap.insertAdjacentHTML("beforeend", listItemRow(i))); }
-    } else if (b.type === "table") {
-      // Rebuild columns
+      if (wrap) {
+        wrap.innerHTML = "";
+        (b.items||[]).forEach(i => wrap.insertAdjacentHTML("beforeend", listItemRow(i)));
+        if (!b.items?.length) wrap.insertAdjacentHTML("beforeend", listItemRow());
+      }
+
+    } else if (b.type==="table") {
       const hdrRow = blk.querySelector("[data-header-row]");
       if (hdrRow) {
         hdrRow.querySelectorAll("[data-header]").forEach(e=>e.remove());
         const rmBtn = hdrRow.querySelector(".remove-row-btn");
         (b.headers||[]).forEach(h => {
           const inp = document.createElement("input");
-          inp.className = "tbl-cell"; inp.setAttribute("data-header",""); inp.value = h;
+          inp.className="tbl-cell"; inp.setAttribute("data-header",""); inp.value=h;
           hdrRow.insertBefore(inp, rmBtn);
         });
       }
       const bodyRows = blk.querySelector("[data-body-rows]");
       if (bodyRows) {
         bodyRows.innerHTML = "";
-        (b.rows||[]).forEach(row => bodyRows.insertAdjacentHTML("beforeend", tableDataRow((b.headers||[]).length, row)));
+        (b.rows||[]).forEach(row =>
+          bodyRows.insertAdjacentHTML("beforeend", tableDataRow((b.headers||[]).length, row)));
       }
     }
   });
-  if (!blocks.length)
-    document.getElementById("cb-blocks").innerHTML =
-      `<div style="text-align:center;color:var(--text3);font-size:12px;padding:16px">Add content blocks above</div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   RICH CONTENT RENDERER (preview + same as index)
+══════════════════════════════════════════════════ */
+function renderRichContent(blocks) {
+  if (!blocks?.length) return `<p style="color:var(--text3);font-size:13px">No content blocks added yet.</p>`;
+  return blocks.map(b => {
+    switch(b.type) {
+      case "h2":        return `<h2>${escHtml(b.text)}</h2>`;
+      case "h3":        return `<h3>${escHtml(b.text)}</h3>`;
+      case "para":      return `<p>${renderInline(b.text)}</p>`;
+      case "highlight": return `<div class="highlight"><p>${renderInline(b.text)}</p></div>`;
+      case "ul":        return `<ul>${(b.items||[]).map(i=>`<li>${renderInline(i)}</li>`).join("")}</ul>`;
+      case "ol":        return `<ol>${(b.items||[]).map(i=>`<li>${renderInline(i)}</li>`).join("")}</ol>`;
+      case "table": {
+        const hdr  = (b.headers||[]).map(h=>`<th>${escHtml(h)}</th>`).join("");
+        const rows = (b.rows||[]).map(r=>`<tr>${r.map(c=>`<td>${escHtml(c)}</td>`).join("")}</tr>`).join("");
+        return `<table><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table>`;
+      }
+      default: return "";
+    }
+  }).join("");
+}
+
+function renderInline(txt) {
+  if (!txt) return "";
+  return escHtml(txt)
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+    .replace(/\*(.+?)\*/g,"<em>$1</em>");
 }
 
 /* ── Toast ───────────────────────────────────────── */
 function showToast(msg, type="success") {
   const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.className = "show " + type;
+  t.textContent = msg; t.className = "show "+type;
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => { t.className = ""; }, 3000);
+  t._timer = setTimeout(()=>{ t.className=""; }, 3000);
 }
 
 function escHtml(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
-
-/* ── Expose globals ──────────────────────────────── */
-window.doLogin = window.doLogin;
-window.doLogout = window.doLogout;
-window.newArticle = window.newArticle;
-window.selectArticle = window.selectArticle;
-window.saveArticle = window.saveArticle;
-window.cancelEdit = window.cancelEdit;
-window.confirmDelete = window.confirmDelete;
-window.closeConfirm = window.closeConfirm;
-window.doDelete = window.doDelete;
-window.applyFilter = window.applyFilter;
-window.listLoadMore = window.listLoadMore;
-window.addBlock = window.addBlock;
-window.removeBlock = window.removeBlock;
-window.moveBlock = window.moveBlock;
-window.addListItem = window.addListItem;
-window.addTableRow = window.addTableRow;
-window.addTableCol = window.addTableCol;
 </script>
 </body>
 </html>
