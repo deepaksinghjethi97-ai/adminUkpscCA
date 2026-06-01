@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -57,6 +56,8 @@ input,select,textarea{font-family:var(--font)}
 .hdr-right{display:flex;align-items:center;gap:10px}
 .btn-outline{background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 14px;color:var(--text2);font-size:12px;transition:.15s;display:flex;align-items:center;gap:6px}
 .btn-outline:hover{border-color:var(--border2);color:var(--text)}
+/* mobile menu toggle */
+.mobile-panel-btn{display:none;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:6px 10px;color:var(--text2);font-size:16px}
 
 /* ── BODY ──────────────────────────────────────── */
 #body{display:flex;flex:1;overflow:hidden}
@@ -65,23 +66,38 @@ input,select,textarea{font-family:var(--font)}
 #left-panel{width:340px;min-width:340px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
 .panel-hdr{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .panel-hdr h3{font-size:13px;font-weight:600}
+.panel-hdr-btns{display:flex;gap:6px;align-items:center}
 .btn-add{background:var(--accent);border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:.15s}
 .btn-add:hover{background:#3a5ce6}
 .panel-filters{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-shrink:0}
 .panel-filters select,.panel-filters input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 9px;color:var(--text);font-size:11.5px;outline:none}
 .panel-filters select:focus,.panel-filters input:focus{border-color:var(--accent)}
+
+/* Bulk actions bar */
+.bulk-bar{padding:8px 12px;border-bottom:1px solid var(--border);background:rgba(79,110,247,.07);display:none;align-items:center;gap:8px;flex-shrink:0}
+.bulk-bar.visible{display:flex}
+.bulk-count{font-size:12px;color:var(--text2);flex:1}
+.bulk-btn{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 10px;color:var(--text2);font-size:11px;display:flex;align-items:center;gap:4px;transition:.15s;white-space:nowrap}
+.bulk-btn:hover{color:var(--text);border-color:var(--border2)}
+.bulk-btn.danger{color:var(--red);border-color:rgba(247,90,124,.3)}
+.bulk-btn.danger:hover{background:rgba(247,90,124,.1)}
+
 #article-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 #article-list::-webkit-scrollbar{width:4px}
 #article-list::-webkit-scrollbar-thumb{background:var(--border)}
-.art-item{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;position:relative}
+.art-item{padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s;position:relative;display:flex;align-items:flex-start;gap:8px}
 .art-item:hover{background:var(--bg3)}
 .art-item.selected{background:rgba(79,110,247,.08);border-left:3px solid var(--accent)}
+.art-item-cb{width:16px;height:16px;min-width:16px;margin-top:2px;accent-color:var(--accent);cursor:pointer}
+.art-item-content{flex:1;min-width:0}
 .art-item .ai-tag{display:inline-flex;align-items:center;gap:3px;padding:2px 6px;border-radius:5px;font-size:8.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
 .art-item .ai-title{font-size:12.5px;font-weight:600;color:var(--text);line-height:1.45;margin-bottom:4px}
 .art-item .ai-meta{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:7px}
 .art-item .ai-meta i{font-size:11px}
 .art-dot{position:absolute;top:12px;right:12px;width:6px;height:6px;border-radius:50%}
 .d-high{background:var(--red)}.d-med{background:var(--amber)}.d-low{background:var(--green)}
+/* draft badge */
+.draft-chip{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:4px;font-size:8px;font-weight:700;letter-spacing:.5px;background:rgba(247,185,61,.15);color:var(--amber);border:1px solid rgba(247,185,61,.3);margin-left:4px}
 .list-empty{padding:32px;text-align:center;color:var(--text3);font-size:13px}
 .list-empty i{font-size:32px;display:block;margin-bottom:8px;opacity:.4}
 .list-load-more{padding:12px;text-align:center}
@@ -97,24 +113,44 @@ input,select,textarea{font-family:var(--font)}
 /* ── EDITOR FORM ───────────────────────────────── */
 #editor-form{display:none;flex-direction:column;height:100%}
 #editor-form.visible{display:flex}
-.editor-bar{padding:12px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2)}
+.editor-bar{padding:10px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--bg2);flex-wrap:wrap;gap:8px}
 .editor-bar-left{display:flex;align-items:center;gap:8px}
 .editor-bar h3{font-size:13px;font-weight:600}
-.editor-bar-right{display:flex;align-items:center;gap:8px}
+.editor-bar-right{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .btn-save{background:var(--green);border:none;border-radius:8px;padding:7px 18px;color:#0d1a12;font-size:12.5px;font-weight:700;display:flex;align-items:center;gap:6px;transition:.15s}
 .btn-save:hover{filter:brightness(1.1)}
 .btn-save:disabled{opacity:.5;cursor:not-allowed}
 .btn-preview{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 14px;color:var(--teal);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
 .btn-preview:hover{background:var(--bg4);border-color:var(--teal)}
+.btn-duplicate{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:7px 14px;color:var(--accent2);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-duplicate:hover{background:var(--bg4);border-color:var(--accent2)}
 .btn-delete{background:rgba(247,90,124,.1);border:1px solid rgba(247,90,124,.3);border-radius:8px;padding:7px 14px;color:var(--red);font-size:12.5px;display:flex;align-items:center;gap:5px;transition:.15s}
 .btn-delete:hover{background:rgba(247,90,124,.2)}
 .btn-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 14px;color:var(--text2);font-size:12.5px;transition:.15s}
 .btn-cancel:hover{color:var(--text);border-color:var(--border2)}
+
+/* Autosave indicator */
+#autosave-status{font-size:10.5px;color:var(--text3);font-family:var(--mono);display:flex;align-items:center;gap:4px}
+#autosave-status i{font-size:12px}
+#autosave-status.saved{color:var(--green)}
+#autosave-status.saving{color:var(--amber)}
+
+/* Draft toggle */
+.draft-toggle{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
+.draft-toggle label{cursor:pointer}
+.toggle-switch{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute}
+.toggle-slider{position:absolute;inset:0;background:var(--bg4);border-radius:10px;cursor:pointer;transition:.2s;border:1px solid var(--border2)}
+.toggle-slider::before{content:'';position:absolute;width:14px;height:14px;left:2px;top:2px;background:var(--text3);border-radius:50%;transition:.2s}
+.toggle-switch input:checked + .toggle-slider{background:rgba(61,224,160,.2);border-color:var(--green)}
+.toggle-switch input:checked + .toggle-slider::before{transform:translateX(16px);background:var(--green)}
+
 .editor-scroll{flex:1;overflow-y:auto;padding:20px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
 .editor-scroll::-webkit-scrollbar{width:4px}
 .editor-scroll::-webkit-scrollbar-thumb{background:var(--border)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .form-row.full{grid-template-columns:1fr}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
 .form-group{display:flex;flex-direction:column;gap:5px}
 .form-group label{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.3px}
 .form-group label .req{color:var(--red);margin-left:2px}
@@ -126,6 +162,18 @@ input,select,textarea{font-family:var(--font)}
 .form-group select option{background:var(--bg2)}
 .form-group textarea{resize:vertical;min-height:70px;line-height:1.6}
 
+/* ── TAG CHIPS INPUT ───────────────────────────── */
+.tag-chips-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;min-height:38px;cursor:text;transition:.15s}
+.tag-chips-wrap:focus-within{border-color:var(--accent)}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.25);border-radius:4px;font-size:11px;color:#7c9af7;white-space:nowrap}
+.tag-chip button{background:none;border:none;color:#7c9af7;font-size:13px;padding:0;line-height:1;opacity:.7;transition:.1s}
+.tag-chip button:hover{opacity:1;color:var(--red)}
+.tag-chip-input{background:transparent;border:none;outline:none;color:var(--text);font-size:12px;font-family:var(--font);min-width:80px;flex:1}
+.tag-suggestions{position:absolute;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:4px;margin-top:2px;z-index:50;width:200px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:none}
+.tag-sug-item{padding:5px 10px;border-radius:5px;font-size:12px;color:var(--text2);cursor:pointer;transition:.1s}
+.tag-sug-item:hover{background:var(--bg3);color:var(--text)}
+.tag-group-wrap{position:relative}
+
 /* ── CONTENT BUILDER ───────────────────────────── */
 .content-builder{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
 .cb-toolbar{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;align-items:center}
@@ -133,11 +181,18 @@ input,select,textarea{font-family:var(--font)}
 .cb-btn{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:5px 10px;color:var(--text2);font-size:11px;display:flex;align-items:center;gap:4px;transition:.15s;white-space:nowrap}
 .cb-btn:hover{color:var(--text);border-color:var(--border2)}
 .cb-btn i{font-size:13px}
+/* Slash shortcut tip */
+.cb-tip{font-size:10px;color:var(--text3);font-family:var(--mono);margin-left:auto;display:flex;align-items:center;gap:4px}
+.cb-tip kbd{background:var(--bg4);border:1px solid var(--border2);border-radius:4px;padding:1px 5px;font-size:9px}
+
 .cb-blocks{padding:14px;display:flex;flex-direction:column;gap:8px;min-height:120px}
 .cb-empty{text-align:center;color:var(--text3);font-size:12px;padding:24px 16px;pointer-events:none}
-.cb-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
-.cb-block-hdr{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2)}
+.cb-block{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:.15s}
+.cb-block:hover{border-color:var(--border2)}
+.cb-block-hdr{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);cursor:grab}
+.cb-block-hdr:active{cursor:grabbing}
 .cb-block-type{font-size:9px;font-weight:700;letter-spacing:.8px;color:var(--accent);text-transform:uppercase;background:rgba(79,110,247,.1);border:1px solid rgba(79,110,247,.2);border-radius:4px;padding:2px 6px}
+.cb-drag-hint{font-size:10px;color:var(--text3);margin-left:2px}
 .cb-block-actions{margin-left:auto;display:flex;gap:4px}
 .cb-action{background:transparent;border:none;color:var(--text3);font-size:14px;padding:2px 4px;border-radius:4px;transition:.15s}
 .cb-action:hover{color:var(--text);background:var(--bg4)}
@@ -149,6 +204,8 @@ input,select,textarea{font-family:var(--font)}
   outline:none;transition:.15s;resize:vertical;line-height:1.6;
 }
 .cb-block-body textarea:focus,.cb-block-body input[data-field]:focus{border-color:var(--accent)}
+/* Paragraph block auto-grow hint */
+.cb-block-body textarea{min-height:80px}
 /* table/list */
 .tbl-header-row,.tbl-data-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
 .tbl-cell{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:12px;outline:none;min-width:0}
@@ -159,22 +216,51 @@ input,select,textarea{font-family:var(--font)}
 .remove-row-btn:hover{color:var(--red)}
 .list-item-row{display:flex;gap:6px;margin-bottom:4px;align-items:center}
 
+/* slash command popup */
+#slash-popup{position:fixed;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:6px;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.5);display:none;min-width:180px}
+.slash-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;transition:.1s;font-size:12.5px;color:var(--text2)}
+.slash-item:hover,.slash-item.active{background:var(--bg3);color:var(--text)}
+.slash-item i{font-size:15px;color:var(--accent);width:18px}
+.slash-item small{font-size:10px;color:var(--text3);margin-left:auto;font-family:var(--mono)}
+
+/* ── DRAFT RESTORE BANNER ──────────────────────── */
+#draft-restore-bar{background:rgba(247,185,61,.08);border-bottom:1px solid rgba(247,185,61,.2);padding:8px 20px;display:none;align-items:center;gap:10px;flex-shrink:0}
+#draft-restore-bar.visible{display:flex}
+#draft-restore-bar p{font-size:12px;color:var(--amber);flex:1}
+.btn-restore{background:rgba(247,185,61,.15);border:1px solid rgba(247,185,61,.3);border-radius:7px;padding:5px 12px;color:var(--amber);font-size:11.5px;transition:.15s}
+.btn-restore:hover{background:rgba(247,185,61,.25)}
+.btn-discard{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 12px;color:var(--text3);font-size:11.5px;transition:.15s}
+.btn-discard:hover{color:var(--text)}
+
 /* ── TOAST ─────────────────────────────────────── */
 #toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 4px 24px rgba(0,0,0,.4);transform:translateY(80px);opacity:0;transition:.3s;z-index:1200;display:flex;align-items:center;gap:8px}
 #toast.show{transform:translateY(0);opacity:1}
 #toast.success{border-color:rgba(61,224,160,.3);color:var(--green)}
 #toast.error{border-color:rgba(247,90,124,.3);color:var(--red)}
+#toast.info{border-color:rgba(79,110,247,.3);color:#7c9af7}
 
 /* ── CONFIRM DIALOG ────────────────────────────── */
 #confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
 #confirm-overlay.open{display:flex}
-.confirm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;max-width:360px;width:100%;text-align:center}
+.confirm-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;max-width:380px;width:100%;text-align:center}
 .confirm-card i{font-size:32px;color:var(--red);margin-bottom:10px}
 .confirm-card h3{font-size:15px;font-weight:700;margin-bottom:6px}
 .confirm-card p{font-size:12.5px;color:var(--text2);margin-bottom:18px}
 .confirm-btns{display:flex;gap:8px;justify-content:center}
 .btn-confirm-del{background:var(--red);border:none;border-radius:8px;padding:8px 20px;color:#fff;font-weight:600;font-size:13px}
 .btn-confirm-cancel{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 20px;color:var(--text2);font-size:13px}
+
+/* ── BULK CATEGORY DIALOG ──────────────────────── */
+#bulk-cat-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;display:none;align-items:center;justify-content:center}
+#bulk-cat-overlay.open{display:flex}
+.bulk-cat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;max-width:360px;width:100%}
+.bulk-cat-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.bulk-cat-card p{font-size:12px;color:var(--text3);margin-bottom:16px}
+.bulk-cat-card select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;outline:none;margin-bottom:14px}
+.bulk-cat-card select:focus{border-color:var(--accent)}
+.bulk-cat-btns{display:flex;gap:8px;justify-content:flex-end}
+.btn-bulk-apply{background:var(--accent);border:none;border-radius:8px;padding:8px 18px;color:#fff;font-weight:600;font-size:13px}
+.btn-bulk-cancel2{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 18px;color:var(--text2);font-size:13px}
 
 /* ── PREVIEW MODAL ─────────────────────────────── */
 #preview-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:32px 16px;overflow-y:auto}
@@ -184,7 +270,7 @@ input,select,textarea{font-family:var(--font)}
 .preview-hdr h3{font-size:13px;font-weight:600;color:var(--text2)}
 .preview-close{background:transparent;border:none;color:var(--text3);font-size:20px;padding:2px 6px;border-radius:6px;transition:.15s}
 .preview-close:hover{color:var(--red);background:rgba(247,90,124,.1)}
-.preview-meta{padding:16px 24px 0;border-bottom:1px solid var(--border);padding-bottom:14px}
+.preview-meta{padding:16px 24px 14px;border-bottom:1px solid var(--border)}
 .preview-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px;background:rgba(79,110,247,.15);color:#7c9af7;border:1px solid rgba(79,110,247,.25)}
 .preview-title{font-size:20px;font-weight:700;line-height:1.4;margin-bottom:8px}
 .preview-info{display:flex;gap:14px;font-size:11px;color:var(--text3)}
@@ -203,12 +289,22 @@ input,select,textarea{font-family:var(--font)}
 .rich-content th{background:var(--bg3);color:var(--text);padding:8px 12px;text-align:left;border:1px solid var(--border);font-weight:600}
 .rich-content td{padding:7px 12px;border:1px solid var(--border);color:var(--text2)}
 .rich-content tr:nth-child(even) td{background:rgba(255,255,255,.02)}
+.rich-content img{max-width:100%;border-radius:8px;border:1px solid var(--border)}
 
 /* ── RESPONSIVE ────────────────────────────────── */
 @media(max-width:900px){
   #left-panel{width:100%;min-width:unset;position:fixed;left:0;top:56px;bottom:0;z-index:90;transform:translateX(-100%);transition:.25s}
-  #left-panel.open{transform:translateX(0)}
+  #left-panel.open{transform:translateX(0);box-shadow:4px 0 32px rgba(0,0,0,.7)}
   #body{flex-direction:column}
+  .mobile-panel-btn{display:flex}
+  .form-row{grid-template-columns:1fr}
+  .form-row.three{grid-template-columns:1fr}
+  .editor-bar-right{gap:4px}
+  .btn-duplicate span,.btn-preview span{display:none}
+}
+@media(max-width:600px){
+  .editor-bar{padding:8px 12px}
+  .editor-scroll{padding:12px}
 }
 </style>
 </head>
@@ -248,6 +344,7 @@ input,select,textarea{font-family:var(--font)}
 <div id="app">
   <div id="hdr">
     <div class="hdr-left">
+      <button class="mobile-panel-btn" onclick="toggleLeftPanel()"><i class="ti ti-layout-sidebar"></i></button>
       <div class="hdr-badge">CA</div>
       <div>
         <div class="hdr-title">Current Affairs Hub</div>
@@ -262,12 +359,21 @@ input,select,textarea{font-family:var(--font)}
     </div>
   </div>
 
+  <!-- Draft restore bar -->
+  <div id="draft-restore-bar">
+    <p><i class="ti ti-clock" style="margin-right:4px"></i>You have an unsaved draft. Would you like to restore it?</p>
+    <button class="btn-restore" onclick="restoreDraft()">Restore Draft</button>
+    <button class="btn-discard" onclick="discardDraft()">Discard</button>
+  </div>
+
   <div id="body">
     <!-- LEFT: article list -->
     <div id="left-panel">
       <div class="panel-hdr">
         <h3>Articles</h3>
-        <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New Article</button>
+        <div class="panel-hdr-btns">
+          <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New</button>
+        </div>
       </div>
       <div class="panel-filters">
         <select id="filter-cat" onchange="applyFilter()">
@@ -311,6 +417,16 @@ input,select,textarea{font-family:var(--font)}
         </select>
         <input id="filter-search" placeholder="Search…" oninput="applyFilter()"/>
       </div>
+
+      <!-- Bulk actions bar -->
+      <div class="bulk-bar" id="bulk-bar">
+        <span class="bulk-count" id="bulk-count-label">0 selected</span>
+        <button class="bulk-btn" onclick="bulkChangeCategory()"><i class="ti ti-tag"></i> Category</button>
+        <button class="bulk-btn" onclick="bulkChangeImportance()"><i class="ti ti-flame"></i> Importance</button>
+        <button class="bulk-btn danger" onclick="bulkDelete()"><i class="ti ti-trash"></i> Delete</button>
+        <button class="bulk-btn" onclick="clearBulkSelection()"><i class="ti ti-x"></i></button>
+      </div>
+
       <div id="article-list"><div class="list-empty"><i class="ti ti-loader"></i>Loading…</div></div>
       <div class="list-load-more" id="list-load-more" style="display:none">
         <button onclick="listLoadMore()">Load more</button>
@@ -328,11 +444,18 @@ input,select,textarea{font-family:var(--font)}
           <div class="editor-bar-left">
             <i class="ti ti-edit" style="font-size:16px;color:var(--accent)"></i>
             <h3 id="editor-mode-label">New Article</h3>
+            <div id="autosave-status"><i class="ti ti-circle-check"></i> <span id="autosave-txt">—</span></div>
           </div>
           <div class="editor-bar-right">
+            <!-- Draft / Published toggle -->
+            <div class="draft-toggle">
+              <label class="toggle-switch"><input type="checkbox" id="f-published"/><span class="toggle-slider"></span></label>
+              <label for="f-published" id="pub-label" style="font-size:11px;color:var(--text3)">Draft</label>
+            </div>
             <button class="btn-cancel" onclick="cancelEdit()"><i class="ti ti-x"></i> Cancel</button>
-            <button class="btn-preview" onclick="openPreview()"><i class="ti ti-eye"></i> Preview</button>
-            <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none"><i class="ti ti-trash"></i> Delete</button>
+            <button class="btn-preview" onclick="openPreview()"><i class="ti ti-eye"></i> <span>Preview</span></button>
+            <button class="btn-duplicate" id="btn-duplicate" onclick="duplicateArticle()" style="display:none"><i class="ti ti-copy"></i> <span>Duplicate</span></button>
+            <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none"><i class="ti ti-trash"></i></button>
             <button class="btn-save" id="btn-save" onclick="saveArticle()"><i class="ti ti-device-floppy"></i> Save</button>
           </div>
         </div>
@@ -340,13 +463,13 @@ input,select,textarea{font-family:var(--font)}
           <div class="form-row full">
             <div class="form-group">
               <label>Title <span class="req">*</span></label>
-              <input id="f-title" placeholder="Enter article title…"/>
+              <input id="f-title" placeholder="Enter article title…" oninput="scheduleDraftSave()"/>
             </div>
           </div>
-          <div class="form-row">
+          <div class="form-row three">
             <div class="form-group">
               <label>Category <span class="req">*</span></label>
-              <select id="f-category">
+              <select id="f-category" onchange="scheduleDraftSave()">
                 <option value="">— Select —</option>
                 <optgroup label="National">
                   <option value="defence">Defence</option>
@@ -388,21 +511,25 @@ input,select,textarea{font-family:var(--font)}
             </div>
             <div class="form-group">
               <label>Importance</label>
-              <select id="f-importance">
+              <select id="f-importance" onchange="scheduleDraftSave()">
                 <option value="high">🔴 High — Must Know</option>
                 <option value="medium">🟡 Medium — Important</option>
                 <option value="low">🟢 Low — Good to Know</option>
               </select>
             </div>
-          </div>
-          <div class="form-row">
             <div class="form-group">
               <label>Date <span class="req">*</span></label>
-              <input type="date" id="f-date"/>
+              <input type="date" id="f-date" onchange="scheduleDraftSave()"/>
             </div>
-            <div class="form-group">
-              <label>Tags (comma separated)</label>
-              <input id="f-tags" placeholder="e.g. ISRO, missile, 2024"/>
+          </div>
+          <div class="form-row full">
+            <div class="form-group tag-group-wrap">
+              <label>Tags</label>
+              <div class="tag-chips-wrap" id="tag-chips-wrap" onclick="focusTagInput()">
+                <input class="tag-chip-input" id="tag-chip-input" placeholder="Type a tag and press Enter…" autocomplete="off"
+                  oninput="onTagInput(this)" onkeydown="onTagKeydown(event)"/>
+              </div>
+              <div class="tag-suggestions" id="tag-suggestions"></div>
             </div>
           </div>
           <div class="form-group" style="margin-bottom:6px">
@@ -411,16 +538,18 @@ input,select,textarea{font-family:var(--font)}
           <div class="content-builder">
             <div class="cb-toolbar">
               <span class="cb-toolbar-label">ADD BLOCK</span>
-              <button class="cb-btn" onclick="addBlock('h2')"><i class="ti ti-heading"></i> Heading 2</button>
-              <button class="cb-btn" onclick="addBlock('h3')"><i class="ti ti-heading"></i> Heading 3</button>
-              <button class="cb-btn" onclick="addBlock('para')"><i class="ti ti-align-left"></i> Paragraph</button>
+              <button class="cb-btn" onclick="addBlock('h2')"><i class="ti ti-heading"></i> H2</button>
+              <button class="cb-btn" onclick="addBlock('h3')"><i class="ti ti-heading"></i> H3</button>
+              <button class="cb-btn" onclick="addBlock('para')"><i class="ti ti-align-left"></i> Para</button>
               <button class="cb-btn" onclick="addBlock('highlight')"><i class="ti ti-info-circle"></i> Highlight</button>
-              <button class="cb-btn" onclick="addBlock('ul')"><i class="ti ti-list"></i> Bullet List</button>
-              <button class="cb-btn" onclick="addBlock('ol')"><i class="ti ti-list-numbers"></i> Numbered List</button>
+              <button class="cb-btn" onclick="addBlock('ul')"><i class="ti ti-list"></i> Bullets</button>
+              <button class="cb-btn" onclick="addBlock('ol')"><i class="ti ti-list-numbers"></i> Numbered</button>
               <button class="cb-btn" onclick="addBlock('table')"><i class="ti ti-table"></i> Table</button>
+              <button class="cb-btn" onclick="addBlock('image')"><i class="ti ti-photo"></i> Image</button>
+              <span class="cb-tip"><kbd>/</kbd> in any text block</span>
             </div>
             <div class="cb-blocks" id="cb-blocks">
-              <div class="cb-empty">Click a button above to add your first content block</div>
+              <div class="cb-empty"><i class="ti ti-text-plus" style="font-size:22px;display:block;margin-bottom:6px;opacity:.3"></i>Click a button above or type <kbd style="background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;font-size:10px">/</kbd> in any paragraph to add content</div>
             </div>
           </div>
           <div style="height:24px"></div>
@@ -433,15 +562,68 @@ input,select,textarea{font-family:var(--font)}
 <!-- ══════════ TOAST ══════════ -->
 <div id="toast"></div>
 
+<!-- ══════════ SLASH COMMAND POPUP ══════════ -->
+<div id="slash-popup">
+  <div class="slash-item" onclick="slashInsert('h2')"><i class="ti ti-heading"></i> Heading 2 <small>H2</small></div>
+  <div class="slash-item" onclick="slashInsert('h3')"><i class="ti ti-heading"></i> Heading 3 <small>H3</small></div>
+  <div class="slash-item" onclick="slashInsert('para')"><i class="ti ti-align-left"></i> Paragraph <small>P</small></div>
+  <div class="slash-item" onclick="slashInsert('highlight')"><i class="ti ti-info-circle"></i> Highlight <small>HI</small></div>
+  <div class="slash-item" onclick="slashInsert('ul')"><i class="ti ti-list"></i> Bullet List <small>UL</small></div>
+  <div class="slash-item" onclick="slashInsert('ol')"><i class="ti ti-list-numbers"></i> Numbered List <small>OL</small></div>
+  <div class="slash-item" onclick="slashInsert('table')"><i class="ti ti-table"></i> Table <small>TB</small></div>
+  <div class="slash-item" onclick="slashInsert('image')"><i class="ti ti-photo"></i> Image <small>IMG</small></div>
+</div>
+
 <!-- ══════════ CONFIRM DELETE ══════════ -->
 <div id="confirm-overlay">
   <div class="confirm-card">
     <i class="ti ti-alert-triangle"></i>
-    <h3>Delete Article?</h3>
-    <p>This action cannot be undone. The article will be permanently deleted.</p>
+    <h3 id="confirm-title">Delete Article?</h3>
+    <p id="confirm-msg">This action cannot be undone. The article will be permanently deleted.</p>
     <div class="confirm-btns">
       <button class="btn-confirm-cancel" onclick="closeConfirm()">Cancel</button>
-      <button class="btn-confirm-del" onclick="doDelete()">Delete</button>
+      <button class="btn-confirm-del" id="confirm-ok-btn" onclick="doDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ BULK CATEGORY DIALOG ══════════ -->
+<div id="bulk-cat-overlay">
+  <div class="bulk-cat-card">
+    <h3>Change Category</h3>
+    <p id="bulk-cat-desc">Change category for selected articles</p>
+    <select id="bulk-cat-select">
+      <option value="defence">Defence</option>
+      <option value="tech">Technology</option>
+      <option value="space">Space</option>
+      <option value="appointments">Appointments</option>
+      <option value="governance">Governance</option>
+      <option value="awards">Awards</option>
+      <option value="operations">Operations</option>
+      <option value="rankings">Rankings</option>
+      <option value="cricket">Cricket</option>
+      <option value="chess">Chess</option>
+      <option value="badminton">Badminton</option>
+      <option value="football">Football</option>
+      <option value="wrestling">Wrestling</option>
+      <option value="hockey">Hockey</option>
+      <option value="athletics">Athletics</option>
+      <option value="boxing">Boxing</option>
+      <option value="shooting">Shooting</option>
+      <option value="sports-others">Other Sports</option>
+      <option value="intl-tech">Intl. Tech</option>
+      <option value="intl-space">Intl. Space</option>
+      <option value="intl-sports">Intl. Sports</option>
+      <option value="intl-summits">Summits</option>
+      <option value="intl-rankings">Intl. Rankings</option>
+      <option value="intl-health">Health</option>
+      <option value="intl-operations">Intl. Operations</option>
+      <option value="intl-awards">Intl. Awards</option>
+      <option value="uttarakhand">Uttarakhand</option>
+    </select>
+    <div class="bulk-cat-btns">
+      <button class="btn-bulk-cancel2" onclick="closeBulkCat()">Cancel</button>
+      <button class="btn-bulk-apply" onclick="applyBulkCategory()">Apply</button>
     </div>
   </div>
 </div>
@@ -460,6 +642,7 @@ input,select,textarea{font-family:var(--font)}
         <span><i class="ti ti-calendar"></i> <span id="pv-date"></span></span>
         <span><i class="ti ti-flame"></i> <span id="pv-imp"></span></span>
         <span><i class="ti ti-tag"></i> <span id="pv-tags"></span></span>
+        <span id="pv-draft-badge"></span>
       </div>
     </div>
     <div class="preview-body rich-content" id="pv-body"></div>
@@ -475,7 +658,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
 import {
   getFirestore, collection, query, where, orderBy, limit,
   startAfter, getDocs, getDoc, addDoc, updateDoc, deleteDoc,
-  doc, Timestamp, serverTimestamp
+  doc, Timestamp, serverTimestamp, writeBatch
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 /* ── Firebase init ───────────────────────────────── */
@@ -498,75 +681,232 @@ let listLastDoc  = null;
 let filterCat    = "";
 let filterSearch = "";
 let allListDocs  = [];
+let selectedIds  = new Set(); // bulk selection
+let currentSlashBlock = null; // block element where / was typed
 
-/* ══════════════════════════════════════════════════
-   AUTH
-══════════════════════════════════════════════════ */
-onAuthStateChanged(auth, user => {
-  if (user) {
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("app").classList.add("visible");
-    document.getElementById("admin-email").textContent = user.email;
-    loadList(true);
-  } else {
-    document.getElementById("login-screen").style.display = "flex";
-    document.getElementById("app").classList.remove("visible");
+/* ── Draft autosave ──────────────────────────────── */
+const DRAFT_KEY = "ca_admin_draft";
+let autosaveTimer = null;
+
+window.scheduleDraftSave = function() {
+  clearTimeout(autosaveTimer);
+  setAutosaveStatus("saving");
+  autosaveTimer = setTimeout(saveDraftToLS, 1500);
+};
+
+function saveDraftToLS() {
+  try {
+    const draft = {
+      id: editingId,
+      title: document.getElementById("f-title").value,
+      category: document.getElementById("f-category").value,
+      importance: document.getElementById("f-importance").value,
+      date: document.getElementById("f-date").value,
+      tags: getTags(),
+      published: document.getElementById("f-published").checked,
+      blocks: collectBlocks(),
+      savedAt: Date.now()
+    };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    setAutosaveStatus("saved");
+  } catch(e) { console.error("Draft save error", e); }
+}
+
+function setAutosaveStatus(status) {
+  const el = document.getElementById("autosave-status");
+  const txt = document.getElementById("autosave-txt");
+  el.className = status;
+  if (status === "saving") { el.innerHTML = `<i class="ti ti-loader"></i>`; txt.textContent = "Saving…"; }
+  else if (status === "saved") {
+    const t = new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
+    el.innerHTML = `<i class="ti ti-circle-check"></i>`; txt.textContent = `Saved ${t}`;
+    setTimeout(()=>{ txt.textContent = `Draft saved`; }, 3000);
+  } else { el.innerHTML = ""; txt.textContent = ""; }
+}
+
+function checkForDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return;
+    const draft = JSON.parse(raw);
+    if (draft && draft.title) {
+      document.getElementById("draft-restore-bar").classList.add("visible");
+    }
+  } catch(e) {}
+}
+
+window.restoreDraft = function() {
+  try {
+    const draft = JSON.parse(localStorage.getItem(DRAFT_KEY)||"{}");
+    if (!draft.title) return;
+    openEditor(draft.id || null);
+    setTimeout(() => {
+      document.getElementById("f-title").value = draft.title || "";
+      document.getElementById("f-category").value = draft.category || "";
+      document.getElementById("f-importance").value = draft.importance || "high";
+      document.getElementById("f-date").value = draft.date || "";
+      document.getElementById("f-published").checked = !!draft.published;
+      updatePubLabel();
+      setTagsFromArray(draft.tags || []);
+      if (draft.blocks) loadBlocksIntoBuilder(draft.blocks);
+      document.getElementById("draft-restore-bar").classList.remove("visible");
+      showToast("Draft restored", "info");
+    }, 100);
+  } catch(e) {}
+};
+
+window.discardDraft = function() {
+  localStorage.removeItem(DRAFT_KEY);
+  document.getElementById("draft-restore-bar").classList.remove("visible");
+};
+
+/* ── Publish toggle label ────────────────────────── */
+document.getElementById("f-published")?.addEventListener("change", updatePubLabel);
+function updatePubLabel() {
+  const pub = document.getElementById("f-published").checked;
+  document.getElementById("pub-label").textContent = pub ? "Published" : "Draft";
+  document.getElementById("pub-label").style.color = pub ? "var(--green)" : "var(--text3)";
+}
+
+/* ── Mobile panel toggle ─────────────────────────── */
+window.toggleLeftPanel = function() {
+  document.getElementById("left-panel").classList.toggle("open");
+};
+
+/* ── Auth ────────────────────────────────────────── */
+window.doGoogleLogin = async function() {
+  const btn = document.getElementById("google-btn");
+  btn.disabled = true;
+  try {
+    await signInWithPopup(auth, new GoogleAuthProvider());
+  } catch(e) {
+    const err = document.getElementById("login-err");
+    err.textContent = e.message; err.style.display = "block";
+    btn.disabled = false;
   }
-});
+};
 
 window.doLogin = async function() {
   const email = document.getElementById("login-email").value.trim();
   const pass  = document.getElementById("login-pass").value;
   const btn   = document.getElementById("login-btn");
   const err   = document.getElementById("login-err");
-  err.style.display = "none";
-  btn.textContent = "Signing in…"; btn.disabled = true;
+  err.style.display = "none"; btn.disabled = true; btn.textContent = "Signing in…";
   try {
     await signInWithEmailAndPassword(auth, email, pass);
   } catch(e) {
-    err.textContent = "Invalid email or password.";
-    err.style.display = "block";
-    btn.textContent = "Sign in"; btn.disabled = false;
-  }
-};
-
-window.doGoogleLogin = async function() {
-  const btn = document.getElementById("google-btn");
-  const err = document.getElementById("login-err");
-  err.style.display = "none";
-  btn.disabled = true;
-  btn.innerHTML = `<span style="opacity:.7">Signing in…</span>`;
-  try {
-    await signInWithPopup(auth, new GoogleAuthProvider());
-  } catch(e) {
-    err.textContent = e.code === "auth/popup-closed-by-user" ? "Sign-in cancelled." : "Google sign-in failed. Try again.";
-    err.style.display = "block";
-    btn.disabled = false;
-    btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 48 48" style="flex-shrink:0"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg> Continue with Google`;
+    err.textContent = e.message; err.style.display = "block";
+    btn.disabled = false; btn.textContent = "Sign in";
   }
 };
 
 window.doLogout = () => signOut(auth);
 
-/* ══════════════════════════════════════════════════
-   ARTICLE LIST
-══════════════════════════════════════════════════ */
-async function loadList(fresh = false) {
-  if (fresh) { listLastDoc = null; allListDocs = []; }
-  let q;
-  if (filterCat) {
-    q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+onAuthStateChanged(auth, user => {
+  if (user) {
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("app").classList.add("visible");
+    document.getElementById("admin-email").textContent = user.email || user.displayName || "";
+    loadList(true);
+    checkForDraft();
   } else {
-    q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("app").classList.remove("visible");
   }
-  if (!fresh && listLastDoc) {
-    if (filterCat) {
-      q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
-    } else {
-      q = query(collection(db,COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+});
+
+/* ── TAG CHIPS ───────────────────────────────────── */
+let currentTags = [];
+const KNOWN_TAGS_KEY = "ca_known_tags";
+
+function getKnownTags() {
+  try { return JSON.parse(localStorage.getItem(KNOWN_TAGS_KEY)||"[]"); } catch { return []; }
+}
+function saveKnownTag(tag) {
+  const known = getKnownTags();
+  if (!known.includes(tag)) { known.push(tag); localStorage.setItem(KNOWN_TAGS_KEY, JSON.stringify(known.slice(-200))); }
+}
+function getTags() { return [...currentTags]; }
+function setTagsFromArray(arr) {
+  currentTags = [];
+  const wrap = document.getElementById("tag-chips-wrap");
+  // Remove old chips
+  wrap.querySelectorAll(".tag-chip").forEach(c => c.remove());
+  (arr||[]).forEach(t => addTagChip(t));
+}
+
+function addTagChip(tag) {
+  tag = tag.trim().toLowerCase();
+  if (!tag || currentTags.includes(tag)) return;
+  currentTags.push(tag);
+  saveKnownTag(tag);
+  const chip = document.createElement("span");
+  chip.className = "tag-chip";
+  chip.innerHTML = `${escHtml(tag)}<button type="button" onclick="removeTagChip(this,'${escHtml(tag)}')" title="Remove"><i class="ti ti-x"></i></button>`;
+  const input = document.getElementById("tag-chip-input");
+  document.getElementById("tag-chips-wrap").insertBefore(chip, input);
+  scheduleDraftSave();
+}
+
+window.removeTagChip = function(btn, tag) {
+  currentTags = currentTags.filter(t => t !== tag);
+  btn.parentElement.remove();
+  scheduleDraftSave();
+};
+window.focusTagInput = function() { document.getElementById("tag-chip-input").focus(); };
+
+window.onTagInput = function(inp) {
+  const val = inp.value;
+  const known = getKnownTags();
+  const sugs = known.filter(t => t.startsWith(val.toLowerCase()) && !currentTags.includes(t)).slice(0,6);
+  const sugBox = document.getElementById("tag-suggestions");
+  if (sugs.length && val) {
+    sugBox.innerHTML = sugs.map(t => `<div class="tag-sug-item" onclick="pickTagSug('${escHtml(t)}')">${escHtml(t)}</div>`).join("");
+    sugBox.style.display = "block";
+  } else {
+    sugBox.style.display = "none";
+  }
+};
+
+window.pickTagSug = function(tag) {
+  addTagChip(tag);
+  document.getElementById("tag-chip-input").value = "";
+  document.getElementById("tag-suggestions").style.display = "none";
+};
+
+window.onTagKeydown = function(e) {
+  if (e.key === "Enter" || e.key === ",") {
+    e.preventDefault();
+    const val = e.target.value.replace(",","").trim();
+    if (val) addTagChip(val);
+    e.target.value = "";
+    document.getElementById("tag-suggestions").style.display = "none";
+  } else if (e.key === "Backspace" && !e.target.value) {
+    if (currentTags.length) { removeTagChip(null, currentTags[currentTags.length-1]); /* remove chip el manually */ 
+      document.querySelector("#tag-chips-wrap .tag-chip:last-of-type")?.remove();
+      currentTags.pop();
     }
+  } else if (e.key === "Escape") {
+    document.getElementById("tag-suggestions").style.display = "none";
   }
+};
+document.addEventListener("click", e => {
+  if (!e.target.closest(".tag-group-wrap")) document.getElementById("tag-suggestions").style.display = "none";
+});
+
+/* ── List loading ────────────────────────────────── */
+async function loadList(fresh=false) {
+  if (fresh) { listLastDoc = null; allListDocs = []; }
   try {
+    let q;
+    if (filterCat) {
+      q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+    } else {
+      q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+    }
+    if (listLastDoc) q = query(collection(db,COL),
+      ...(filterCat ? [where("category","==",filterCat)] : []),
+      orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
     const snap = await getDocs(q);
     if (fresh) allListDocs = [];
     snap.docs.forEach(d => allListDocs.push(d));
@@ -574,292 +914,463 @@ async function loadList(fresh = false) {
     document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
     renderList();
   } catch(e) {
-    document.getElementById("article-list").innerHTML =
-      `<div class="list-empty"><i class="ti ti-wifi-off"></i><p>Failed to load</p></div>`;
+    console.error("loadList error:", e);
+    document.getElementById("article-list").innerHTML = `<div class="list-empty"><i class="ti ti-alert-circle"></i>${e.message}</div>`;
   }
 }
+
+window.listLoadMore = () => loadList(false);
 
 function renderList() {
   const search = filterSearch.toLowerCase();
   const filtered = search
     ? allListDocs.filter(d => (d.data().title||"").toLowerCase().includes(search))
     : allListDocs;
-  if (!filtered.length) {
-    document.getElementById("article-list").innerHTML =
-      `<div class="list-empty"><i class="ti ti-inbox"></i><p>No articles found</p></div>`;
-    return;
-  }
-  document.getElementById("article-list").innerHTML = filtered.map(d => {
+  const list = document.getElementById("article-list");
+  if (!filtered.length) { list.innerHTML = `<div class="list-empty"><i class="ti ti-inbox"></i>No articles found.</div>`; return; }
+  list.innerHTML = filtered.map(d => {
     const data = d.data();
     const dotCls = data.importance==="high" ? "d-high" : data.importance==="medium" ? "d-med" : "d-low";
     const dateStr = data.date?.toDate
       ? data.date.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
-      : "";
-    return `<div class="art-item" onclick="selectArticle('${d.id}')" id="item-${d.id}">
+      : data.date || "";
+    const isDraft = data.published === false;
+    const isSelected = selectedIds.has(d.id);
+    return `<div class="art-item${editingId===d.id?" selected":""}" data-id="${d.id}">
+      <input type="checkbox" class="art-item-cb" ${isSelected?"checked":""} onchange="toggleBulkSelect(event,'${d.id}')" onclick="event.stopPropagation()"/>
+      <div class="art-item-content" onclick="editArticle('${d.id}')">
+        <span class="ai-tag t-${data.category==='defence'?'defence':data.category==='tech'?'tech':'default'}">${(data.category||"").toUpperCase()}</span>
+        ${isDraft ? `<span class="draft-chip"><i class="ti ti-pencil"></i> DRAFT</span>` : ""}
+        <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
+        <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr} <i class="ti ti-flame"></i>${data.importance||"—"}</div>
+      </div>
       <div class="art-dot ${dotCls}"></div>
-      <div class="ai-tag" style="background:rgba(79,110,247,.1);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${(data.category||"").toUpperCase()}</div>
-      <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
-      <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr}<i class="ti ti-flame" style="margin-left:4px"></i>${data.importance||""}</div>
     </div>`;
   }).join("");
 }
 
 window.applyFilter = function() {
   filterCat    = document.getElementById("filter-cat").value;
-  filterSearch = document.getElementById("filter-search").value.trim();
-  if (filterSearch) { renderList(); return; }
+  filterSearch = document.getElementById("filter-search").value;
   loadList(true);
 };
-window.listLoadMore = () => loadList(false);
 
-/* ══════════════════════════════════════════════════
-   EDITOR — OPEN / CLOSE
-══════════════════════════════════════════════════ */
-window.selectArticle = async function(id) {
-  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
-  document.getElementById("item-"+id)?.classList.add("selected");
-  editingId = id;
-  showEditor();
-  document.getElementById("editor-mode-label").textContent = "Edit Article";
-  document.getElementById("btn-delete").style.display = "";
-  clearForm();
+/* ── Bulk selection ──────────────────────────────── */
+window.toggleBulkSelect = function(e, id) {
+  if (e.target.checked) selectedIds.add(id);
+  else selectedIds.delete(id);
+  updateBulkBar();
+};
+
+function updateBulkBar() {
+  const bar = document.getElementById("bulk-bar");
+  const lbl = document.getElementById("bulk-count-label");
+  bar.classList.toggle("visible", selectedIds.size > 0);
+  lbl.textContent = `${selectedIds.size} selected`;
+}
+
+window.clearBulkSelection = function() {
+  selectedIds.clear();
+  updateBulkBar();
+  renderList();
+};
+
+window.bulkDelete = async function() {
+  if (!selectedIds.size) return;
+  if (!confirm(`Delete ${selectedIds.size} article(s)? This cannot be undone.`)) return;
   try {
-    const snap = await getDoc(doc(db,COL,id));
-    if (!snap.exists()) return;
+    const batch = writeBatch(db);
+    selectedIds.forEach(id => batch.delete(doc(db, COL, id)));
+    await batch.commit();
+    showToast(`Deleted ${selectedIds.size} article(s)`, "success");
+    selectedIds.clear();
+    updateBulkBar();
+    loadList(true);
+    if (editingId && selectedIds.has(editingId)) cancelEdit();
+  } catch(e) { showToast("Bulk delete failed: " + e.message, "error"); }
+};
+
+window.bulkChangeCategory = function() {
+  if (!selectedIds.size) return;
+  document.getElementById("bulk-cat-desc").textContent = `Change category for ${selectedIds.size} article(s)`;
+  document.getElementById("bulk-cat-overlay").classList.add("open");
+};
+window.closeBulkCat = () => document.getElementById("bulk-cat-overlay").classList.remove("open");
+window.applyBulkCategory = async function() {
+  const cat = document.getElementById("bulk-cat-select").value;
+  try {
+    const batch = writeBatch(db);
+    selectedIds.forEach(id => batch.update(doc(db, COL, id), { category: cat }));
+    await batch.commit();
+    closeBulkCat();
+    showToast(`Updated category for ${selectedIds.size} article(s)`, "success");
+    selectedIds.clear(); updateBulkBar(); loadList(true);
+  } catch(e) { showToast("Error: " + e.message, "error"); }
+};
+
+window.bulkChangeImportance = async function() {
+  if (!selectedIds.size) return;
+  const imp = prompt("Enter importance level (high / medium / low):", "medium");
+  if (!imp || !["high","medium","low"].includes(imp.toLowerCase())) { showToast("Invalid importance value.", "error"); return; }
+  try {
+    const batch = writeBatch(db);
+    selectedIds.forEach(id => batch.update(doc(db, COL, id), { importance: imp.toLowerCase() }));
+    await batch.commit();
+    showToast(`Updated importance for ${selectedIds.size} article(s)`, "success");
+    selectedIds.clear(); updateBulkBar(); loadList(true);
+  } catch(e) { showToast("Error: " + e.message, "error"); }
+};
+
+/* ── Open editor ─────────────────────────────────── */
+function openEditor(id) {
+  editingId = id;
+  document.getElementById("editor-placeholder").style.display = "none";
+  document.getElementById("editor-form").classList.add("visible");
+  document.getElementById("btn-delete").style.display   = id ? "" : "none";
+  document.getElementById("btn-duplicate").style.display = id ? "" : "none";
+  document.getElementById("editor-mode-label").textContent = id ? "Edit Article" : "New Article";
+  setAutosaveStatus("none");
+  // Mobile: close left panel after selection
+  document.getElementById("left-panel").classList.remove("open");
+}
+
+window.newArticle = function() {
+  resetEditor();
+  openEditor(null);
+  document.getElementById("f-date").value = new Date().toISOString().slice(0,10);
+};
+
+window.editArticle = async function(id) {
+  resetEditor();
+  openEditor(id);
+  try {
+    const snap = await getDoc(doc(db, COL, id));
+    if (!snap.exists()) { showToast("Article not found", "error"); return; }
     const d = snap.data();
     document.getElementById("f-title").value      = d.title || "";
     document.getElementById("f-category").value   = d.category || "";
     document.getElementById("f-importance").value = d.importance || "high";
-    document.getElementById("f-tags").value        = (d.tags||[]).join(", ");
+    document.getElementById("f-published").checked = d.published !== false; // default published
+    updatePubLabel();
     if (d.date?.toDate) {
-      document.getElementById("f-date").value = d.date.toDate().toISOString().split("T")[0];
+      document.getElementById("f-date").value = d.date.toDate().toISOString().slice(0,10);
+    } else if (d.date) {
+      document.getElementById("f-date").value = d.date;
     }
-    loadBlocksIntoBuilder(d.content || []);
-  } catch(e) { showToast("Failed to load article","error"); }
+    setTagsFromArray(Array.isArray(d.tags) ? d.tags : (d.tags ? d.tags.split(",").map(t=>t.trim()) : []));
+    if (d.content) loadBlocksIntoBuilder(d.content);
+    renderList(); // refresh selected state
+  } catch(e) { showToast("Error loading article: " + e.message, "error"); }
 };
 
-window.newArticle = function() {
-  editingId = null;
-  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
-  showEditor();
-  document.getElementById("editor-mode-label").textContent = "New Article";
-  document.getElementById("btn-delete").style.display = "none";
-  clearForm();
-  document.getElementById("f-date").value = new Date().toISOString().split("T")[0];
+/* ── Duplicate article ───────────────────────────── */
+window.duplicateArticle = async function() {
+  if (!editingId) return;
+  try {
+    const snap = await getDoc(doc(db, COL, editingId));
+    if (!snap.exists()) return;
+    const d = snap.data();
+    const newData = { ...d, title: "Copy of " + (d.title||"Untitled"), published: false, createdAt: serverTimestamp(), updatedAt: serverTimestamp() };
+    const ref = await addDoc(collection(db, COL), newData);
+    showToast("Article duplicated as draft!", "success");
+    loadList(true);
+    editArticle(ref.id);
+  } catch(e) { showToast("Duplicate failed: " + e.message, "error"); }
 };
 
-function clearForm() {
-  document.getElementById("f-title").value      = "";
-  document.getElementById("f-tags").value        = "";
-  document.getElementById("f-category").value   = "";
-  document.getElementById("f-importance").value = "high";
-  document.getElementById("f-date").value        = "";
-  resetBlocksPlaceholder();
-}
-
-function showEditor() {
-  document.getElementById("editor-placeholder").style.display = "none";
-  document.getElementById("editor-form").classList.add("visible");
-}
-
-window.cancelEdit = function() {
-  editingId = null;
-  document.querySelectorAll(".art-item").forEach(e => e.classList.remove("selected"));
-  document.getElementById("editor-form").classList.remove("visible");
-  document.getElementById("editor-placeholder").style.display = "";
-};
-
-/* ══════════════════════════════════════════════════
-   EDITOR — SAVE / DELETE
-══════════════════════════════════════════════════ */
+/* ── Save article ────────────────────────────────── */
 window.saveArticle = async function() {
   const title    = document.getElementById("f-title").value.trim();
   const category = document.getElementById("f-category").value;
   const dateVal  = document.getElementById("f-date").value;
-  if (!title)    { showToast("Title is required","error"); return; }
-  if (!category) { showToast("Select a category","error"); return; }
-  if (!dateVal)  { showToast("Date is required","error"); return; }
+  const published = document.getElementById("f-published").checked;
 
-  const content    = collectBlocks();
-  const tags       = document.getElementById("f-tags").value.split(",").map(t=>t.trim()).filter(Boolean);
-  const importance = document.getElementById("f-importance").value;
-  const dateTs     = Timestamp.fromDate(new Date(dateVal));
-  const btn        = document.getElementById("btn-save");
+  if (!title)    { showToast("Title is required", "error"); return; }
+  if (!category) { showToast("Category is required", "error"); return; }
+  if (!dateVal)  { showToast("Date is required", "error"); return; }
+
+  const blocks = collectBlocks();
+  if (!blocks.length) { showToast("Add at least one content block", "error"); return; }
+
+  const tags = getTags();
+  const btn  = document.getElementById("btn-save");
   btn.disabled = true; btn.innerHTML = `<i class="ti ti-loader"></i> Saving…`;
 
-  const payload = { title, category, importance, date:dateTs, tags, content, updatedAt:serverTimestamp() };
+  const payload = {
+    title,
+    category,
+    importance: document.getElementById("f-importance").value,
+    date: Timestamp.fromDate(new Date(dateVal)),
+    tags,
+    content: blocks,
+    published,
+    updatedAt: serverTimestamp()
+  };
+
   try {
     if (editingId) {
-      await updateDoc(doc(db,COL,editingId), payload);
-      showToast("Article updated ✓","success");
+      await updateDoc(doc(db, COL, editingId), payload);
+      showToast("Article updated!", "success");
     } else {
       payload.createdAt = serverTimestamp();
-      const ref = await addDoc(collection(db,COL), payload);
+      const ref = await addDoc(collection(db, COL), payload);
       editingId = ref.id;
-      document.getElementById("editor-mode-label").textContent = "Edit Article";
-      document.getElementById("btn-delete").style.display = "";
-      showToast("Article created ✓","success");
+      openEditor(editingId);
     }
+    // Remove draft from localStorage on successful save
+    localStorage.removeItem(DRAFT_KEY);
+    setAutosaveStatus("saved");
     loadList(true);
-  } catch(e) { showToast("Save failed: "+e.message,"error"); }
+  } catch(e) {
+    showToast("Save failed: " + e.message, "error");
+  }
   btn.disabled = false; btn.innerHTML = `<i class="ti ti-device-floppy"></i> Save`;
 };
 
-window.confirmDelete = function() { document.getElementById("confirm-overlay").classList.add("open"); };
-window.closeConfirm  = function() { document.getElementById("confirm-overlay").classList.remove("open"); };
+/* ── Delete ──────────────────────────────────────── */
+window.confirmDelete = function() {
+  document.getElementById("confirm-title").textContent = "Delete Article?";
+  document.getElementById("confirm-msg").textContent = "This action cannot be undone.";
+  document.getElementById("confirm-ok-btn").onclick = doDelete;
+  document.getElementById("confirm-overlay").classList.add("open");
+};
+window.closeConfirm = () => document.getElementById("confirm-overlay").classList.remove("open");
 window.doDelete = async function() {
-  closeConfirm();
   if (!editingId) return;
   try {
-    await deleteDoc(doc(db,COL,editingId));
-    showToast("Article deleted","success");
+    await deleteDoc(doc(db, COL, editingId));
+    closeConfirm();
+    showToast("Article deleted", "success");
     cancelEdit();
     loadList(true);
-  } catch(e) { showToast("Delete failed","error"); }
+  } catch(e) { showToast("Delete failed: " + e.message, "error"); }
 };
 
-/* ══════════════════════════════════════════════════
-   PREVIEW
-══════════════════════════════════════════════════ */
+/* ── Cancel edit ─────────────────────────────────── */
+window.cancelEdit = function() {
+  editingId = null;
+  resetEditor();
+  document.getElementById("editor-form").classList.remove("visible");
+  document.getElementById("editor-placeholder").style.display = "";
+  renderList();
+};
+
+function resetEditor() {
+  document.getElementById("f-title").value      = "";
+  document.getElementById("f-category").value   = "";
+  document.getElementById("f-importance").value = "high";
+  document.getElementById("f-date").value        = "";
+  document.getElementById("f-published").checked = true;
+  updatePubLabel();
+  currentTags = [];
+  document.querySelectorAll("#tag-chips-wrap .tag-chip").forEach(c => c.remove());
+  document.getElementById("tag-chip-input").value = "";
+  resetBlocksPlaceholder();
+  setAutosaveStatus("none");
+}
+
+/* ── Preview ─────────────────────────────────────── */
 window.openPreview = function() {
-  const title    = document.getElementById("f-title").value.trim() || "Untitled";
-  const category = document.getElementById("f-category").value || "—";
-  const dateVal  = document.getElementById("f-date").value;
-  const imp      = document.getElementById("f-importance").value;
-  const tags     = document.getElementById("f-tags").value;
-  const blocks   = collectBlocks();
-
-  const dateStr = dateVal
-    ? new Date(dateVal).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
-    : "—";
-  const impLabel = {high:"🔴 High",medium:"🟡 Medium",low:"🟢 Low"}[imp] || imp;
-
-  document.getElementById("pv-tag").textContent   = category.toUpperCase();
-  document.getElementById("pv-title").textContent = title;
-  document.getElementById("pv-date").textContent  = dateStr;
-  document.getElementById("pv-imp").textContent   = impLabel;
-  document.getElementById("pv-tags").textContent  = tags || "—";
-  document.getElementById("pv-body").innerHTML    = renderRichContent(blocks);
-
+  const tag = document.getElementById("f-category").value;
+  const published = document.getElementById("f-published").checked;
+  document.getElementById("pv-tag").textContent    = tag.toUpperCase();
+  document.getElementById("pv-title").textContent  = document.getElementById("f-title").value || "Untitled";
+  document.getElementById("pv-date").textContent   = document.getElementById("f-date").value;
+  document.getElementById("pv-imp").textContent    = document.getElementById("f-importance").value;
+  document.getElementById("pv-tags").textContent   = getTags().join(", ");
+  document.getElementById("pv-draft-badge").innerHTML = !published
+    ? `<span style="background:rgba(247,185,61,.15);color:var(--amber);border:1px solid rgba(247,185,61,.3);border-radius:4px;padding:1px 7px;font-size:10px;font-weight:700">DRAFT</span>`
+    : "";
+  document.getElementById("pv-body").innerHTML     = renderRichContent(collectBlocks());
   document.getElementById("preview-overlay").classList.add("open");
-  document.body.style.overflow = "hidden";
 };
-
-window.closePreview = function() {
-  document.getElementById("preview-overlay").classList.remove("open");
-  document.body.style.overflow = "";
-};
-
-document.addEventListener("keydown", e => { if(e.key==="Escape") closePreview(); });
+window.closePreview = () => document.getElementById("preview-overlay").classList.remove("open");
 
 /* ══════════════════════════════════════════════════
-   CONTENT BLOCK BUILDER
+   CONTENT BUILDER
 ══════════════════════════════════════════════════ */
-let blockId = 0;
-function uid() { return "blk-" + (++blockId); }
 
 function resetBlocksPlaceholder() {
   document.getElementById("cb-blocks").innerHTML =
-    `<div class="cb-empty">Click a button above to add your first content block</div>`;
+    `<div class="cb-empty"><i class="ti ti-text-plus" style="font-size:22px;display:block;margin-bottom:6px;opacity:.3"></i>Click a button above or type <kbd style="background:var(--bg4);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;font-size:10px">/</kbd> in any paragraph to add content</div>`;
 }
-
 function clearPlaceholder() {
-  const container = document.getElementById("cb-blocks");
-  const empty = container.querySelector(".cb-empty");
-  if (empty) empty.remove();
+  document.querySelector("#cb-blocks .cb-empty")?.remove();
 }
 
-window.addBlock = function(type) {
-  clearPlaceholder();   /* ← FIX: only removes .cb-empty, never touches real blocks */
-  const id = uid();
-  const typeLabel = {h2:"Heading 2",h3:"Heading 3",para:"Paragraph",
-    highlight:"Highlight / Key Fact",ul:"Bullet List",ol:"Numbered List",table:"Table"}[type];
+/* ── Slash command popup ─────────────────────────── */
+let slashSourceEl = null;
+window.slashInsert = function(type) {
+  hideSlashPopup();
+  if (slashSourceEl) {
+    // Remove the "/" character typed
+    slashSourceEl.value = slashSourceEl.value.replace(/\/$/, "");
+  }
+  addBlock(type);
+  slashSourceEl = null;
+};
 
-  let inner = "";
-  if (type === "h2" || type === "h3") {
-    inner = `<input data-field="text" placeholder="Enter heading…"/>`;
+function showSlashPopup(el) {
+  slashSourceEl = el;
+  const popup = document.getElementById("slash-popup");
+  const rect  = el.getBoundingClientRect();
+  popup.style.top  = (rect.bottom + window.scrollY + 4) + "px";
+  popup.style.left = (rect.left + window.scrollX) + "px";
+  popup.style.display = "block";
+}
+function hideSlashPopup() {
+  document.getElementById("slash-popup").style.display = "none";
+  slashSourceEl = null;
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest("#slash-popup") && !e.target.closest(".cb-block")) hideSlashPopup();
+});
+document.addEventListener("keydown", e => { if(e.key==="Escape") hideSlashPopup(); });
+
+/* Attach slash listener to any textarea in builder */
+function attachSlashListener(textarea) {
+  textarea.addEventListener("input", function() {
+    if (this.value.endsWith("/")) showSlashPopup(this);
+    else hideSlashPopup();
+    scheduleDraftSave();
+  });
+}
+
+/* ── Add block ───────────────────────────────────── */
+let blockCounter = 0;
+window.addBlock = function(type) {
+  clearPlaceholder();
+  const id = "blk-" + (++blockCounter);
+  const container = document.getElementById("cb-blocks");
+  let body = "";
+  const label = {h2:"Heading 2",h3:"Heading 3",para:"Paragraph",highlight:"Highlight Box",ul:"Bullet List",ol:"Numbered List",table:"Table",image:"Image"}[type]||type;
+
+  if (["h2","h3"].includes(type)) {
+    body = `<input type="text" data-field="text" placeholder="${label} text…" oninput="scheduleDraftSave()"/>`;
   } else if (type === "para") {
-    inner = `<textarea data-field="text" rows="3" placeholder="Write paragraph… Use **bold** and *italic*"></textarea>`;
+    body = `<textarea data-field="text" rows="4" placeholder="Write paragraph here…\n\nTip: Use **bold** and *italic* for formatting. Type / to insert a new block."></textarea>`;
   } else if (type === "highlight") {
-    inner = `<textarea data-field="text" rows="2" placeholder="Key fact or note… e.g. **Padma Vibhushan 2025:** …"></textarea>`;
+    body = `<textarea data-field="text" rows="3" placeholder="Key highlight or important note…\n\nSupports **bold** and *italic*."></textarea>`;
   } else if (type === "ul" || type === "ol") {
-    inner = `<div data-list-items>
-        ${listItemRow("Item 1")}${listItemRow("Item 2")}
-      </div>
+    body = `<div data-list-items>${listItemRow()}</div>
       <button class="add-row-btn" onclick="addListItem('${id}')"><i class="ti ti-plus"></i> Add item</button>`;
   } else if (type === "table") {
-    inner = `<div data-table-wrap>
-        <div class="tbl-header-row" data-header-row>
-          <input class="tbl-cell" placeholder="Col 1" data-header/>
-          <input class="tbl-cell" placeholder="Col 2" data-header/>
-          <input class="tbl-cell" placeholder="Col 3" data-header/>
-          <button class="remove-row-btn" style="visibility:hidden"><i class="ti ti-trash"></i></button>
-        </div>
-        <div data-body-rows>${tableDataRow(3)}</div>
+    body = `<div>
+      <div class="tbl-header-row" data-header-row>
+        <input class="tbl-cell" data-header placeholder="Header 1"/>
+        <input class="tbl-cell" data-header placeholder="Header 2"/>
+        <button class="remove-row-btn" onclick="addTableCol('${id}')" title="Add column"><i class="ti ti-plus"></i></button>
       </div>
-      <button class="add-row-btn" onclick="addTableRow('${id}')"><i class="ti ti-plus"></i> Add row</button>
-      <button class="add-col-btn" onclick="addTableCol('${id}')"><i class="ti ti-plus"></i> Add col</button>`;
+      <div data-body-rows>${tableDataRow(2)}</div>
+      <div style="margin-top:6px">
+        <button class="add-row-btn" onclick="addTableRow('${id}')"><i class="ti ti-plus"></i> Add row</button>
+      </div>
+    </div>`;
+  } else if (type === "image") {
+    body = `<div style="display:flex;flex-direction:column;gap:8px">
+      <input type="url" data-field="url" placeholder="Image URL (https://…)" oninput="previewImage(this);scheduleDraftSave()"/>
+      <input type="text" data-field="alt" placeholder="Caption / Alt text (optional)" oninput="scheduleDraftSave()"/>
+      <div data-img-preview style="display:none;margin-top:4px"><img style="max-width:100%;max-height:160px;border-radius:8px;border:1px solid var(--border)"/></div>
+    </div>`;
   }
 
-  document.getElementById("cb-blocks").insertAdjacentHTML("beforeend", `
-    <div class="cb-block" data-type="${type}" id="${id}">
+  container.insertAdjacentHTML("beforeend", `
+    <div class="cb-block" id="${id}" data-type="${type}">
       <div class="cb-block-hdr">
-        <span class="cb-block-type">${typeLabel}</span>
+        <span class="cb-block-type">${type.toUpperCase()}</span>
+        <span class="cb-drag-hint"><i class="ti ti-grip-horizontal" style="font-size:13px;color:var(--text3)"></i></span>
         <div class="cb-block-actions">
           <button class="cb-action" onclick="moveBlock('${id}',-1)" title="Move up"><i class="ti ti-arrow-up"></i></button>
-          <button class="cb-action" onclick="moveBlock('${id}',1)"  title="Move down"><i class="ti ti-arrow-down"></i></button>
-          <button class="cb-action del" onclick="removeBlock('${id}')" title="Remove"><i class="ti ti-trash"></i></button>
+          <button class="cb-action" onclick="moveBlock('${id}',1)" title="Move down"><i class="ti ti-arrow-down"></i></button>
+          <button class="cb-action del" onclick="removeBlock('${id}')" title="Delete block"><i class="ti ti-trash"></i></button>
         </div>
       </div>
-      <div class="cb-block-body">${inner}</div>
+      <div class="cb-block-body">${body}</div>
     </div>`);
+
+  // Attach slash listener to any textareas
+  const block = document.getElementById(id);
+  block.querySelectorAll("textarea").forEach(t => attachSlashListener(t));
+
+  // Auto-focus first input
+  const first = block.querySelector("input[data-field],textarea[data-field],input.tbl-cell,input[type='url']");
+  if (first) setTimeout(() => first.focus(), 30);
+
+  scheduleDraftSave();
+};
+
+/* Preview image block */
+window.previewImage = function(inp) {
+  const preview = inp.closest(".cb-block-body").querySelector("[data-img-preview]");
+  if (!preview) return;
+  const url = inp.value.trim();
+  if (url) {
+    preview.style.display = "";
+    preview.querySelector("img").src = url;
+  } else {
+    preview.style.display = "none";
+  }
 };
 
 function listItemRow(val="") {
   return `<div class="list-item-row">
-    <input data-item class="tbl-cell" style="flex:1" placeholder="List item…" value="${escHtml(val)}"/>
-    <button class="remove-row-btn" onclick="this.closest('.list-item-row').remove()"><i class="ti ti-x"></i></button>
+    <input class="tbl-cell" data-item placeholder="List item…" value="${escHtml(val)}" oninput="scheduleDraftSave()" onkeydown="listItemEnter(event,this)"/>
+    <button class="remove-row-btn" onclick="this.parentElement.remove();scheduleDraftSave()"><i class="ti ti-x"></i></button>
   </div>`;
 }
 
-function tableDataRow(cols=3, vals=[]) {
-  const cells = Array.from({length:cols},(_,i) =>
-    `<input class="tbl-cell" placeholder="Cell" data-cell value="${escHtml(vals[i]||"")}"/>`).join("");
-  return `<div class="tbl-data-row">${cells}
-    <button class="remove-row-btn" onclick="this.closest('.tbl-data-row').remove()"><i class="ti ti-trash"></i></button>
-  </div>`;
-}
+/* Press Enter in list item to add next */
+window.listItemEnter = function(e, inp) {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const row = inp.closest(".list-item-row");
+    const newRow = document.createElement("div");
+    newRow.innerHTML = listItemRow();
+    row.after(newRow.firstElementChild);
+    newRow.querySelector?.("input")?.focus();
+    row.parentElement?.querySelector(".list-item-row:last-child input")?.focus();
+  }
+};
 
 window.addListItem = function(id) {
-  document.querySelector(`#${id} [data-list-items]`).insertAdjacentHTML("beforeend", listItemRow());
+  const wrap = document.querySelector(`#${id} [data-list-items]`);
+  if (wrap) { wrap.insertAdjacentHTML("beforeend", listItemRow()); wrap.lastElementChild.querySelector("input")?.focus(); }
 };
+
+function tableDataRow(cols=2, vals=[]) {
+  const cells = Array(cols).fill(0).map((_,i) =>
+    `<input class="tbl-cell" data-cell placeholder="Cell" value="${escHtml(vals[i]||"")}" oninput="scheduleDraftSave()"/>`
+  ).join("");
+  return `<div class="tbl-data-row">${cells}<button class="remove-row-btn" onclick="this.parentElement.remove();scheduleDraftSave()"><i class="ti ti-x"></i></button></div>`;
+}
 window.addTableRow = function(id) {
-  const cols = document.querySelectorAll(`#${id} [data-header]`).length;
-  document.querySelector(`#${id} [data-body-rows]`).insertAdjacentHTML("beforeend", tableDataRow(cols));
+  const hdrCount = document.querySelectorAll(`#${id} [data-header]`).length;
+  document.querySelector(`#${id} [data-body-rows]`)?.insertAdjacentHTML("beforeend", tableDataRow(hdrCount));
 };
 window.addTableCol = function(id) {
   const hdrRow = document.querySelector(`#${id} [data-header-row]`);
   const rmBtn  = hdrRow.querySelector(".remove-row-btn");
   const inp    = document.createElement("input");
-  inp.className = "tbl-cell"; inp.placeholder = "New col"; inp.setAttribute("data-header","");
+  inp.className = "tbl-cell"; inp.placeholder = "Header"; inp.setAttribute("data-header",""); inp.oninput = scheduleDraftSave;
   hdrRow.insertBefore(inp, rmBtn);
   document.querySelectorAll(`#${id} .tbl-data-row`).forEach(row => {
     const rmb  = row.querySelector(".remove-row-btn");
     const cell = document.createElement("input");
-    cell.className = "tbl-cell"; cell.placeholder = "Cell"; cell.setAttribute("data-cell","");
+    cell.className = "tbl-cell"; cell.placeholder = "Cell"; cell.setAttribute("data-cell",""); cell.oninput = scheduleDraftSave;
     row.insertBefore(cell, rmb);
   });
 };
 window.removeBlock = function(id) {
   document.getElementById(id)?.remove();
-  /* show placeholder if no blocks left */
   if (!document.querySelector("#cb-blocks .cb-block")) resetBlocksPlaceholder();
+  scheduleDraftSave();
 };
 window.moveBlock = function(id, dir) {
   const el = document.getElementById(id);
   const parent = el.parentNode;
-  if (dir===-1 && el.previousElementSibling) parent.insertBefore(el, el.previousElementSibling);
-  else if (dir===1 && el.nextElementSibling)  parent.insertBefore(el.nextElementSibling, el);
+  if (dir===-1 && el.previousElementSibling?.classList.contains("cb-block")) parent.insertBefore(el, el.previousElementSibling);
+  else if (dir===1 && el.nextElementSibling?.classList.contains("cb-block")) parent.insertBefore(el.nextElementSibling, el);
+  scheduleDraftSave();
 };
 
 /* ── Collect blocks ──────────────────────────────── */
@@ -878,6 +1389,10 @@ function collectBlocks() {
       const rows    = [...blk.querySelectorAll(".tbl-data-row")].map(row =>
         [...row.querySelectorAll("[data-cell]")].map(c=>c.value.trim()));
       blocks.push({ type, headers, rows });
+    } else if (type==="image") {
+      const url = blk.querySelector("[data-field='url']")?.value.trim();
+      const alt = blk.querySelector("[data-field='alt']")?.value.trim();
+      if (url) blocks.push({ type, url, alt: alt||"" });
     }
   });
   return blocks;
@@ -885,21 +1400,15 @@ function collectBlocks() {
 
 /* ── Load saved blocks ───────────────────────────── */
 function loadBlocksIntoBuilder(blocks) {
-  /* clear container directly — don't call resetBlocksPlaceholder which would show placeholder */
   document.getElementById("cb-blocks").innerHTML = "";
-
-  if (!blocks.length) { resetBlocksPlaceholder(); return; }
-
+  if (!blocks || !blocks.length) { resetBlocksPlaceholder(); return; }
   blocks.forEach(b => {
-    /* addBlock calls clearPlaceholder (safe) then appends */
     addBlock(b.type);
     const blk = document.getElementById("cb-blocks").lastElementChild;
     if (!blk) return;
-
     if (["h2","h3","para","highlight"].includes(b.type)) {
       const el = blk.querySelector("[data-field='text']");
       if (el) el.value = b.text || "";
-
     } else if (["ul","ol"].includes(b.type)) {
       const wrap = blk.querySelector("[data-list-items]");
       if (wrap) {
@@ -907,7 +1416,6 @@ function loadBlocksIntoBuilder(blocks) {
         (b.items||[]).forEach(i => wrap.insertAdjacentHTML("beforeend", listItemRow(i)));
         if (!b.items?.length) wrap.insertAdjacentHTML("beforeend", listItemRow());
       }
-
     } else if (b.type==="table") {
       const hdrRow = blk.querySelector("[data-header-row]");
       if (hdrRow) {
@@ -915,7 +1423,7 @@ function loadBlocksIntoBuilder(blocks) {
         const rmBtn = hdrRow.querySelector(".remove-row-btn");
         (b.headers||[]).forEach(h => {
           const inp = document.createElement("input");
-          inp.className="tbl-cell"; inp.setAttribute("data-header",""); inp.value=h;
+          inp.className="tbl-cell"; inp.setAttribute("data-header",""); inp.value=h; inp.oninput=scheduleDraftSave;
           hdrRow.insertBefore(inp, rmBtn);
         });
       }
@@ -925,12 +1433,17 @@ function loadBlocksIntoBuilder(blocks) {
         (b.rows||[]).forEach(row =>
           bodyRows.insertAdjacentHTML("beforeend", tableDataRow((b.headers||[]).length, row)));
       }
+    } else if (b.type==="image") {
+      const urlEl = blk.querySelector("[data-field='url']");
+      const altEl = blk.querySelector("[data-field='alt']");
+      if (urlEl) { urlEl.value = b.url || ""; previewImage(urlEl); }
+      if (altEl) altEl.value = b.alt || "";
     }
   });
 }
 
 /* ══════════════════════════════════════════════════
-   RICH CONTENT RENDERER (preview + same as index)
+   RICH CONTENT RENDERER (preview)
 ══════════════════════════════════════════════════ */
 function renderRichContent(blocks) {
   if (!blocks?.length) return `<p style="color:var(--text3);font-size:13px">No content blocks added yet.</p>`;
@@ -947,6 +1460,7 @@ function renderRichContent(blocks) {
         const rows = (b.rows||[]).map(r=>`<tr>${r.map(c=>`<td>${escHtml(c)}</td>`).join("")}</tr>`).join("");
         return `<table><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table>`;
       }
+      case "image": return b.url ? `<div style="text-align:center;margin:12px 0"><img src="${escHtml(b.url)}" alt="${escHtml(b.alt||'')}"/>${b.alt?`<p style="font-size:11px;color:var(--text3);margin-top:4px">${escHtml(b.alt)}</p>`:""}</div>` : "";
       default: return "";
     }
   }).join("");
@@ -970,6 +1484,11 @@ function showToast(msg, type="success") {
 function escHtml(s) {
   return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
+
+/* Expose for global use */
+window.showToast = showToast;
+window.openPreview = openPreview;
+window.closePreview = closePreview;
 </script>
 </body>
 </html>
