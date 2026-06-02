@@ -423,9 +423,14 @@ input,select,textarea{font-family:var(--font)}
 }
 
 /* ── TICKER PANEL ──────────────────────────────── */
-#ticker-panel{display:none;flex:1;overflow-y:auto;padding:32px;background:var(--bg)}
-#ticker-panel.visible{display:block}
-.tp-wrap{max-width:620px;margin:0 auto}
+/* #app is display:flex + flex-direction:column, so children need flex:1 to fill */
+#ticker-panel{
+  display:none;flex:1;min-height:0;
+  overflow-y:auto;padding:40px 32px;
+  background:var(--bg);
+}
+#ticker-panel.visible{display:flex;flex-direction:column}
+.tp-wrap{width:100%;max-width:620px;margin:0 auto}
 .tp-hdr{margin-bottom:24px}
 .tp-hdr h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:4px}
 .tp-hdr h2 i{color:var(--accent)}
@@ -433,7 +438,7 @@ input,select,textarea{font-family:var(--font)}
 .tp-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
 .tp-card-lbl{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:6px}
 .tp-card-lbl i{color:var(--accent);font-size:14px}
-.tp-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:10px}
+.tp-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:10px;box-sizing:border-box}
 .tp-input:focus{border-color:var(--accent)}
 .tp-input::placeholder{color:var(--text3)}
 .tp-row{display:flex;gap:10px}
@@ -454,7 +459,9 @@ input,select,textarea{font-family:var(--font)}
 .tp-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
 .tp-empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.3}
 .btn-outline.ticker-active{background:rgba(79,110,247,.15);border-color:rgba(79,110,247,.4);color:var(--accent)}
-</style>
+
+/* ── PRINT STYLES ─────────────────────────────── */
+@media print{
   #hdr,#left-panel,#draft-restore-bar,.editor-bar,#toast{display:none!important}
   .editor-scroll{padding:0;overflow:visible}
   .doc-editor-wrap{border:none}
@@ -791,12 +798,12 @@ input,select,textarea{font-family:var(--font)}
     </div>
   </div><!-- /#body -->
 
-  <!-- TICKER PANEL — direct child of #app, toggled instead of #body -->
+  <!-- TICKER PANEL — sibling of #body inside #app flex column, fills remaining height -->
   <div id="ticker-panel">
     <div class="tp-wrap">
       <div class="tp-hdr">
         <h2><i class="ti ti-broadcast"></i> Live Ticker Manager</h2>
-        <p>Manage the scrolling news bar shown to all users. Changes go live within 60 seconds.</p>
+        <p>Manage the scrolling news bar on the user site. Changes reflect within 60 seconds.</p>
       </div>
       <div class="tp-card">
         <div class="tp-card-lbl"><i class="ti ti-plus"></i> Add New Item</div>
@@ -1659,7 +1666,125 @@ function renderRichContent(blocks) {
 }
 
 /* ── List loading ────────────────────────────────── */
+async function loadList(fresh=false) {
+  if (fresh) { listLastDoc = null; allListDocs = []; }
+  try {
+    let snap;
+    try {
+      // Primary: compound query (requires composite index in Firestore)
+      let q;
+      if (filterCat) {
+        q = listLastDoc
+          ? query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
+          : query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+      } else {
+        q = listLastDoc
+          ? query(collection(db,COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
+          : query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+      }
+      snap = await getDocs(q);
+    } catch(idxErr) {
+      // Fallback while composite index is building — no orderBy, sort client-side
+      console.warn("Index building, using client-side sort fallback:", idxErr.message);
+      const fq = filterCat
+        ? query(collection(db,COL), where("category","==",filterCat), limit(PAGE*5))
+        : query(collection(db,COL), limit(PAGE*5));
+      const raw = await getDocs(fq);
+      const sorted = [...raw.docs].sort((a,b)=>{
+        return (b.data().date?.toMillis?.()??0)-(a.data().date?.toMillis?.()??0);
+      });
+      snap = { docs: sorted, size: sorted.length };
+    }
+    if (fresh) allListDocs = [];
+    snap.docs.forEach(d => allListDocs.push(d));
+    listLastDoc = snap.docs[snap.docs.length-1];
+    document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
+    renderList();
+  } catch(e) {
+    console.error("loadList error:", e);
+    document.getElementById("article-list").innerHTML = `<div class="list-empty"><i class="ti ti-alert-circle"></i>${e.message}</div>`;
+  }
+}
 window.listLoadMore = () => loadList(false);
+
+/* ══════════ LIVE TICKER MANAGER ══════════ */
+const TICKER_COL  = "ticker_items";
+let _tickerUnsub  = null;
+let _tickerOpen   = false;
+
+window.toggleTickerPanel = function() {
+  _tickerOpen = !_tickerOpen;
+  const body  = document.getElementById("body");
+  const panel = document.getElementById("ticker-panel");
+  const btn   = document.getElementById("btn-ticker");
+  if (_tickerOpen) {
+    body.style.display = "none";
+    panel.classList.add("visible");        // display:flex via CSS
+    btn.classList.add("ticker-active");
+    _startTickerSync();
+  } else {
+    panel.classList.remove("visible");
+    body.style.display = "";
+    btn.classList.remove("ticker-active");
+    if (_tickerUnsub) { _tickerUnsub(); _tickerUnsub = null; }
+  }
+};
+
+function _startTickerSync() {
+  if (_tickerUnsub) _tickerUnsub();
+  const q = query(collection(db, TICKER_COL), orderBy("createdAt","asc"));
+  _tickerUnsub = onSnapshot(q, snap => {
+    const list  = document.getElementById("ti-list");
+    const count = document.getElementById("ti-count");
+    if (!list) return;
+    if (count) count.textContent = snap.empty ? "" : ` (${snap.size})`;
+    if (snap.empty) {
+      list.innerHTML = `<div class="tp-empty"><i class="ti ti-inbox"></i>No items yet. Add one above — it goes live instantly.</div>`;
+      return;
+    }
+    list.innerHTML = snap.docs.map(d => {
+      const v  = d.data();
+      const ts = v.createdAt?.toDate
+        ? v.createdAt.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
+        : "—";
+      return `<div class="tp-item">
+        <div class="tp-item-ico"><i class="ti ${escHtml(v.icon||"ti-star")}"></i></div>
+        <div class="tp-item-txt">${escHtml(v.text||"")}</div>
+        <div class="tp-item-date">${ts}</div>
+        <button class="tp-del" onclick="deleteTickerItem('${d.id}')" title="Delete"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join("");
+  }, err => {
+    const list = document.getElementById("ti-list");
+    if (list) list.innerHTML = `<div class="tp-empty"><i class="ti ti-alert-circle"></i>${escHtml(err.message)}</div>`;
+  });
+}
+
+window.addTickerItem = async function() {
+  const textEl = document.getElementById("ti-text");
+  const iconEl = document.getElementById("ti-icon");
+  const btn    = document.getElementById("ti-add-btn");
+  const text   = textEl?.value.trim();
+  const icon   = iconEl?.value || "ti-star";
+  if (!text) { showToast("Please enter ticker text.", "error"); textEl?.focus(); return; }
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
+    textEl.value = ""; iconEl.value = "ti-star";
+    showToast("Ticker item added — live for users now.");
+  } catch(e) { showToast("Failed: " + e.message, "error"); }
+  btn.disabled = false;
+};
+
+window.deleteTickerItem = async function(id) {
+  if (!confirm("Remove this ticker item?")) return;
+  try {
+    await deleteDoc(doc(db, TICKER_COL, id));
+    showToast("Ticker item removed.");
+  } catch(e) { showToast("Failed: " + e.message, "error"); }
+};
+
+/* ── Build table grid on init ──────────────────── */
 
 function renderList() {
   const search = filterSearch.toLowerCase();
@@ -1951,134 +2076,6 @@ window.showToast = showToast;
 window.openPreview = openPreview;
 window.closePreview = closePreview;
 window.escHtml = escHtml;
-
-/* ── loadList: handles missing composite index gracefully ── */
-async function loadList(fresh=false) {
-  if (fresh) { listLastDoc = null; allListDocs = []; }
-  try {
-    let snap;
-    try {
-      // Primary path: uses composite index (category + date desc)
-      let q;
-      if (filterCat) {
-        q = listLastDoc
-          ? query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
-          : query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
-      } else {
-        q = listLastDoc
-          ? query(collection(db,COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
-          : query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
-      }
-      snap = await getDocs(q);
-    } catch(indexErr) {
-      // Fallback while index is being built — fetch without orderBy, sort client-side
-      console.warn("Index not ready, falling back to client-side sort:", indexErr.message);
-      const fallbackQ = filterCat
-        ? query(collection(db,COL), where("category","==",filterCat), limit(PAGE * 5))
-        : query(collection(db,COL), limit(PAGE * 5));
-      const rawSnap = await getDocs(fallbackQ);
-      const sorted = [...rawSnap.docs].sort((a,b) => {
-        const ta = a.data().date?.toMillis?.() ?? 0;
-        const tb = b.data().date?.toMillis?.() ?? 0;
-        return tb - ta;
-      });
-      snap = { docs: sorted, size: sorted.length };
-    }
-    if (fresh) allListDocs = [];
-    snap.docs.forEach(d => allListDocs.push(d));
-    listLastDoc = snap.docs[snap.docs.length - 1];
-    document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
-    renderList();
-  } catch(e) {
-    console.error("loadList error:", e);
-    document.getElementById("article-list").innerHTML =
-      `<div class="list-empty"><i class="ti ti-alert-circle"></i>${e.message}</div>`;
-  }
-}
-window.listLoadMore = () => loadList(false);
-
-/* ══════════ LIVE TICKER MANAGER ══════════ */
-const TICKER_COL = "ticker_items";
-let _tickerUnsub  = null;
-let _tickerOpen   = false;
-
-window.toggleTickerPanel = function() {
-  _tickerOpen = !_tickerOpen;
-  const body  = document.getElementById("body");
-  const panel = document.getElementById("ticker-panel");
-  const btn   = document.getElementById("btn-ticker");
-
-  if (_tickerOpen) {
-    body.style.display  = "none";
-    panel.style.display = "block";
-    btn.classList.add("ticker-active");
-    _startTickerSync();
-  } else {
-    panel.style.display = "none";
-    body.style.display  = "";
-    btn.classList.remove("ticker-active");
-    if (_tickerUnsub) { _tickerUnsub(); _tickerUnsub = null; }
-  }
-};
-
-function _startTickerSync() {
-  if (_tickerUnsub) _tickerUnsub();
-  const q = query(collection(db, TICKER_COL), orderBy("createdAt", "asc"));
-  _tickerUnsub = onSnapshot(q, snap => {
-    const list  = document.getElementById("ti-list");
-    const count = document.getElementById("ti-count");
-    if (!list) return;
-    if (count) count.textContent = snap.empty ? "" : ` (${snap.size})`;
-    if (snap.empty) {
-      list.innerHTML = `<div class="tp-empty"><i class="ti ti-inbox"></i>No items yet. Add one above — it goes live instantly.</div>`;
-      return;
-    }
-    list.innerHTML = snap.docs.map(d => {
-      const v  = d.data();
-      const ts = v.createdAt?.toDate
-        ? v.createdAt.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
-        : "—";
-      return `<div class="tp-item">
-        <div class="tp-item-ico"><i class="ti ${escHtml(v.icon||"ti-star")}"></i></div>
-        <div class="tp-item-txt">${escHtml(v.text||"")}</div>
-        <div class="tp-item-date">${ts}</div>
-        <button class="tp-del" onclick="deleteTickerItem('${d.id}')" title="Delete"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }).join("");
-  }, err => {
-    const list = document.getElementById("ti-list");
-    if (list) list.innerHTML = `<div class="tp-empty"><i class="ti ti-alert-circle"></i>${escHtml(err.message)}</div>`;
-  });
-}
-
-window.addTickerItem = async function() {
-  const textEl = document.getElementById("ti-text");
-  const iconEl = document.getElementById("ti-icon");
-  const btn    = document.getElementById("ti-add-btn");
-  const text   = textEl?.value.trim();
-  const icon   = iconEl?.value || "ti-star";
-  if (!text) { showToast("Please enter ticker text.", "error"); textEl?.focus(); return; }
-  btn.disabled = true;
-  try {
-    await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
-    textEl.value = "";
-    iconEl.value = "ti-star";
-    showToast("Ticker item added — live for users now.");
-  } catch(e) {
-    showToast("Failed: " + e.message, "error");
-  }
-  btn.disabled = false;
-};
-
-window.deleteTickerItem = async function(id) {
-  if (!confirm("Remove this ticker item?")) return;
-  try {
-    await deleteDoc(doc(db, TICKER_COL, id));
-    showToast("Ticker item removed.");
-  } catch(e) {
-    showToast("Failed: " + e.message, "error");
-  }
-};
 
 /* ── Build table grid on init ──────────────────── */
 (function buildTblGrid(){
