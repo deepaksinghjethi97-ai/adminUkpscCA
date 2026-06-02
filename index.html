@@ -1052,22 +1052,9 @@ window.removeTagChip = function(btn, tag) {
 };
 window.focusTagInput = function() { document.getElementById("tag-chip-input").focus(); };
 window.onTagInput = function(inp) {
-  const val = inp.value;
-  const known = getKnownTags();
-  const sugs = known.filter(t => t.startsWith(val.toLowerCase()) && !currentTags.includes(t)).slice(0,6);
-  const sugBox = document.getElementById("tag-suggestions");
-  if (sugs.length && val) {
-    sugBox.innerHTML = sugs.map(t => `<div class="tag-sug-item" onclick="pickTagSug('${escHtml(t)}')">${escHtml(t)}</div>`).join("");
-    sugBox.style.display = "block";
-  } else {
-    sugBox.style.display = "none";
-  }
-};
-window.pickTagSug = function(tag) {
-  addTagChip(tag);
-  document.getElementById("tag-chip-input").value = "";
   document.getElementById("tag-suggestions").style.display = "none";
 };
+window.pickTagSug = function(tag) {};
 window.onTagKeydown = function(e) {
   if (e.key === "Enter" || e.key === ",") {
     e.preventDefault();
@@ -1370,6 +1357,68 @@ window.onDocKeydown = function(e) {
   if (e.key === "Tab") {
     e.preventDefault();
     document.execCommand(e.shiftKey ? "outdent" : "indent", false, null);
+    return;
+  }
+
+  // Enter key: break out of blockquote / pre / headings
+  if (e.key === "Enter" && !e.shiftKey) {
+    const sel = window.getSelection();
+    if (!sel.rangeCount) return;
+    let node = sel.anchorNode;
+    // Walk up to find if we're inside a blockquote, pre, or heading
+    let container = node.nodeType === 3 ? node.parentElement : node;
+    let escapeBlock = null;
+    while (container && container !== docBody) {
+      const t = container.tagName?.toLowerCase();
+      if (t === "blockquote" || t === "pre" || t === "h1" || t === "h2" || t === "h3" || t === "h4") {
+        escapeBlock = container;
+        break;
+      }
+      container = container.parentElement;
+    }
+    if (!escapeBlock) return; // normal paragraph — browser handles it
+
+    const range = sel.getRangeAt(0);
+    // Check if cursor is at the very end of the block
+    const atEnd = range.collapsed && range.endOffset === (range.endContainer.length ?? range.endContainer.childNodes.length);
+
+    if (atEnd) {
+      // Check if the last child is truly empty (just <br> or empty text)
+      const lastChild = escapeBlock.lastChild;
+      const isEmpty = lastChild && (
+        (lastChild.nodeType === 3 && lastChild.textContent === "") ||
+        (lastChild.nodeName === "BR")
+      );
+
+      if (escapeBlock.tagName.toLowerCase() === "blockquote" || escapeBlock.tagName.toLowerCase() === "pre") {
+        // On second Enter at end of blockquote/pre, break out
+        e.preventDefault();
+        const p = document.createElement("p");
+        p.innerHTML = "<br>";
+        escapeBlock.insertAdjacentElement("afterend", p);
+        // Move cursor into new p
+        const newRange = document.createRange();
+        newRange.setStart(p, 0);
+        newRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(newRange);
+        scheduleDraftSave();
+      }
+      // For headings: always break out to a new <p> on Enter
+    }
+
+    if (escapeBlock.tagName.match(/^H[1-4]$/i)) {
+      e.preventDefault();
+      const p = document.createElement("p");
+      p.innerHTML = "<br>";
+      escapeBlock.insertAdjacentElement("afterend", p);
+      const newRange = document.createRange();
+      newRange.setStart(p, 0);
+      newRange.collapse(true);
+      sel.removeAllRanges();
+      sel.addRange(newRange);
+      scheduleDraftSave();
+    }
   }
 };
 
@@ -1440,8 +1489,18 @@ function serializeNode(node, blocks) {
       const img = node.querySelector("img");
       if (img) {
         blocks.push({ type:"image", url: img.src, alt: img.alt || node.querySelector("figcaption")?.innerText || "" });
+      } else if (node.classList.contains("img-wrap")) {
+        // empty img-wrap, skip
+        break;
       } else {
-        node.childNodes.forEach(child => serializeNode(child, blocks));
+        // contenteditable sometimes wraps lines in <div> instead of <p>
+        // treat non-img divs as paragraphs if they have direct text content
+        const h = node.innerHTML.trim();
+        if (h && h !== "<br>") {
+          blocks.push({ type:"para", html: h });
+        } else {
+          node.childNodes.forEach(child => serializeNode(child, blocks));
+        }
       }
       break;
     }
@@ -1484,9 +1543,9 @@ function deserializeBlocks(blocks) {
         return `<ol>${items}</ol>`;
       }
       case "table": {
-        const hdr  = (b.headers||[]).map(h => `<th>${typeof h==="string"?escHtml(h):h}</th>`).join("");
+        const hdr  = (b.headers||[]).map(h => `<th>${h||""}</th>`).join("");
         const rows = (b.rows||[]).map(r =>
-          `<tr>${r.map(c => `<td>${typeof c==="string"?escHtml(c):c}</td>`).join("")}</tr>`
+          `<tr>${r.map(c => `<td>${c||""}</td>`).join("")}</tr>`
         ).join("");
         return `<table><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table>`;
       }
@@ -1848,17 +1907,11 @@ window.escHtml = escHtml;
   const docEditorWrap = document.querySelector(".doc-editor-wrap");
   if (!sentinel || !floatWrap || !realToolbar || !scrollEl || !docEditorWrap) return;
 
-  // Placeholder holds the toolbar's height in the layout while it is
-  // physically parented to floatWrap, so doc-editor-wrap doesn't jump.
   const placeholder = document.createElement("div");
   placeholder.style.cssText = "flex-shrink:0;";
-
-  // Original next-sibling so we can re-insert the toolbar in exactly the
-  // right position when the sentinel comes back into view.
   const originalNextSibling = realToolbar.nextSibling;
 
   function lift() {
-    // Measure before moving so placeholder has the right height.
     placeholder.style.height = realToolbar.offsetHeight + "px";
     docEditorWrap.insertBefore(placeholder, originalNextSibling);
     floatWrap.appendChild(realToolbar);
@@ -1872,13 +1925,7 @@ window.escHtml = escHtml;
   }
 
   const observer = new IntersectionObserver(
-    ([entry]) => {
-      if (!entry.isIntersecting) {
-        lift();
-      } else {
-        drop();
-      }
-    },
+    ([entry]) => { entry.isIntersecting ? drop() : lift(); },
     { root: scrollEl, threshold: 0 }
   );
   observer.observe(sentinel);
