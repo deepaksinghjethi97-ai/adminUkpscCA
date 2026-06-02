@@ -422,8 +422,39 @@ input,select,textarea{font-family:var(--font)}
   .tb-btn{padding:3px 5px;min-width:24px}
 }
 
-/* ── PRINT STYLES ─────────────────────────────── */
-@media print{
+/* ── TICKER PANEL ──────────────────────────────── */
+#ticker-panel{display:none;flex:1;overflow-y:auto;padding:32px;background:var(--bg)}
+#ticker-panel.visible{display:block}
+.tp-wrap{max-width:620px;margin:0 auto}
+.tp-hdr{margin-bottom:24px}
+.tp-hdr h2{font-size:17px;font-weight:700;display:flex;align-items:center;gap:9px;margin-bottom:4px}
+.tp-hdr h2 i{color:var(--accent)}
+.tp-hdr p{font-size:12px;color:var(--text3)}
+.tp-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:20px}
+.tp-card-lbl{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tp-card-lbl i{color:var(--accent);font-size:14px}
+.tp-input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:10px}
+.tp-input:focus{border-color:var(--accent)}
+.tp-input::placeholder{color:var(--text3)}
+.tp-row{display:flex;gap:10px}
+.tp-select{flex:0 0 170px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
+.tp-select:focus{border-color:var(--accent)}
+.tp-btn-add{flex:1;background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.3);border-radius:8px;padding:10px 18px;color:var(--accent);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;transition:.15s;cursor:pointer}
+.tp-btn-add:hover{background:rgba(79,110,247,.28);border-color:var(--accent)}
+.tp-btn-add:disabled{opacity:.4;cursor:not-allowed}
+.tp-list-hdr{font-size:11px;font-weight:700;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.tp-cnt{color:var(--accent);margin-left:4px}
+.tp-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:.15s}
+.tp-item:hover{border-color:var(--border2)}
+.tp-item-ico{width:34px;height:34px;background:rgba(79,110,247,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;flex-shrink:0}
+.tp-item-txt{flex:1;font-size:13px;color:var(--text);line-height:1.45;word-break:break-word}
+.tp-item-date{font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.tp-del{background:transparent;border:1px solid transparent;border-radius:7px;padding:5px 8px;color:var(--text3);font-size:14px;transition:.15s;line-height:1;flex-shrink:0;cursor:pointer}
+.tp-del:hover{color:var(--red);border-color:rgba(247,90,124,.3);background:rgba(247,90,124,.08)}
+.tp-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.tp-empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.3}
+.btn-outline.ticker-active{background:rgba(79,110,247,.15);border-color:rgba(79,110,247,.4);color:var(--accent)}
+</style>
   #hdr,#left-panel,#draft-restore-bar,.editor-bar,#toast{display:none!important}
   .editor-scroll{padding:0;overflow:visible}
   .doc-editor-wrap{border:none}
@@ -434,39 +465,6 @@ input,select,textarea{font-family:var(--font)}
   .doc-body p,.doc-body li{color:#222}
   .doc-body th{background:#eee;color:#000}
 }
-
-/* ── TICKER PANEL ─────────────────────────────── */
-#ticker-panel{display:none;flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg)}
-#ticker-panel.active{display:block}
-.tp-wrap{max-width:640px;margin:0 auto}
-.tp-section-hdr{margin-bottom:22px}
-.tp-section-hdr h2{font-size:18px;font-weight:700;display:flex;align-items:center;gap:9px}
-.tp-section-hdr h2 i{color:var(--accent)}
-.tp-section-hdr p{font-size:12px;color:var(--text3);margin-top:4px}
-.tp-add-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:22px}
-.tp-add-card-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:6px}
-.tp-add-card-title i{color:var(--accent);font-size:14px}
-.tp-field{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:10px}
-.tp-field:focus{border-color:var(--accent)}
-.tp-field::placeholder{color:var(--text3)}
-.tp-row{display:flex;gap:10px;align-items:flex-start}
-.tp-select{flex:0 0 160px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
-.tp-select:focus{border-color:var(--accent)}
-.tp-btn-add{background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.35);border-radius:8px;padding:10px 20px;color:var(--accent);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap;cursor:pointer}
-.tp-btn-add:hover{background:rgba(79,110,247,.28);border-color:var(--accent)}
-.tp-btn-add:disabled{opacity:.4;cursor:not-allowed}
-.tp-list-hdr{font-size:11px;font-weight:700;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
-.tp-list-hdr .tp-cnt{color:var(--accent);margin-left:4px}
-.tp-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:.15s}
-.tp-item:hover{border-color:var(--border2)}
-.tp-item-ico{width:34px;height:34px;background:rgba(79,110,247,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;flex-shrink:0}
-.tp-item-txt{flex:1;font-size:13px;color:var(--text);line-height:1.45;min-width:0;word-break:break-word}
-.tp-item-date{font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap;flex-shrink:0}
-.tp-del{background:transparent;border:1px solid transparent;border-radius:7px;padding:5px 8px;color:var(--text3);font-size:14px;transition:.15s;line-height:1;flex-shrink:0;cursor:pointer}
-.tp-del:hover{color:var(--red);border-color:rgba(247,90,124,.3);background:rgba(247,90,124,.08)}
-.tp-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
-.tp-empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.3}
-.btn-outline.active-tab{background:rgba(79,110,247,.12);border-color:rgba(79,110,247,.4);color:var(--accent)}
 </style>
 </head>
 <body>
@@ -515,7 +513,7 @@ input,select,textarea{font-family:var(--font)}
     </div>
     <div class="hdr-right">
       <span style="font-size:12px;color:var(--text3)" id="admin-email"></span>
-      <button class="btn-outline" id="btn-ticker-tab" onclick="toggleTickerPanel()"><i class="ti ti-broadcast"></i> Live Ticker</button>
+      <button class="btn-outline" id="btn-ticker" onclick="toggleTickerPanel()"><i class="ti ti-broadcast"></i> Live Ticker</button>
       <a href="index.html" target="_blank" class="btn-outline"><i class="ti ti-external-link"></i> View Site</a>
       <button class="btn-outline" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
     </div>
@@ -791,49 +789,47 @@ input,select,textarea{font-family:var(--font)}
         </div>
       </div>
     </div>
+  </div><!-- /#body -->
 
-    <!-- TICKER PANEL: toggles in place of the editor layout -->
-    <div id="ticker-panel">
-      <div class="tp-wrap">
-        <div class="tp-section-hdr">
-          <h2><i class="ti ti-broadcast"></i> Live Ticker Manager</h2>
-          <p>Items appear in the scrolling news bar on the user site in real-time.</p>
-        </div>
-
-        <div class="tp-add-card">
-          <div class="tp-add-card-title"><i class="ti ti-plus"></i> Add New Item</div>
-          <input class="tp-field" id="ti-text" placeholder="e.g. India wins T20 World Cup 2024 · beats South Africa in final" maxlength="200"/>
-          <div class="tp-row">
-            <select class="tp-select" id="ti-icon">
-              <option value="ti-star">⭐ Default</option>
-              <option value="ti-rocket">🚀 Rocket</option>
-              <option value="ti-trophy">🏆 Trophy</option>
-              <option value="ti-shield">🛡 Shield</option>
-              <option value="ti-chess">♟ Chess</option>
-              <option value="ti-mountain">⛰ Mountain</option>
-              <option value="ti-award">🏅 Award</option>
-              <option value="ti-flag">🚩 Flag</option>
-              <option value="ti-world">🌍 World</option>
-              <option value="ti-cpu">💻 Tech</option>
-              <option value="ti-building-bank">🏛 Governance</option>
-              <option value="ti-stethoscope">⚕ Health</option>
-              <option value="ti-users">👥 People</option>
-              <option value="ti-bolt">⚡ Bolt</option>
-              <option value="ti-fire">🔥 Fire</option>
-            </select>
-            <button class="tp-btn-add" id="ti-add-btn" onclick="addTickerItem()">
-              <i class="ti ti-plus"></i> Add to Ticker
-            </button>
-          </div>
-        </div>
-
-        <div class="tp-list-hdr"><i class="ti ti-list"></i> Current Items <span class="tp-cnt" id="ti-count"></span></div>
-        <div id="ti-list"><div class="tp-empty"><i class="ti ti-loader"></i>Loading…</div></div>
+  <!-- TICKER PANEL — direct child of #app, toggled instead of #body -->
+  <div id="ticker-panel">
+    <div class="tp-wrap">
+      <div class="tp-hdr">
+        <h2><i class="ti ti-broadcast"></i> Live Ticker Manager</h2>
+        <p>Manage the scrolling news bar shown to all users. Changes go live within 60 seconds.</p>
       </div>
+      <div class="tp-card">
+        <div class="tp-card-lbl"><i class="ti ti-plus"></i> Add New Item</div>
+        <input class="tp-input" id="ti-text" placeholder="e.g. India wins T20 World Cup 2024 · beats South Africa in final" maxlength="200"/>
+        <div class="tp-row">
+          <select class="tp-select" id="ti-icon">
+            <option value="ti-star">⭐  Default</option>
+            <option value="ti-rocket">🚀  Rocket</option>
+            <option value="ti-trophy">🏆  Trophy</option>
+            <option value="ti-shield">🛡  Shield</option>
+            <option value="ti-chess">♟  Chess</option>
+            <option value="ti-mountain">⛰  Mountain</option>
+            <option value="ti-award">🏅  Award</option>
+            <option value="ti-flag">🚩  Flag</option>
+            <option value="ti-world">🌍  World</option>
+            <option value="ti-cpu">💻  Tech</option>
+            <option value="ti-building-bank">🏛  Governance</option>
+            <option value="ti-stethoscope">⚕  Health</option>
+            <option value="ti-users">👥  People</option>
+            <option value="ti-bolt">⚡  Bolt</option>
+            <option value="ti-fire">🔥  Fire</option>
+          </select>
+          <button class="tp-btn-add" id="ti-add-btn" onclick="addTickerItem()">
+            <i class="ti ti-plus"></i> Add to Ticker
+          </button>
+        </div>
+      </div>
+      <div class="tp-list-hdr"><i class="ti ti-list"></i> Current Items<span class="tp-cnt" id="ti-count"></span></div>
+      <div id="ti-list"><div class="tp-empty"><i class="ti ti-inbox"></i>No items yet. Add one above.</div></div>
     </div>
-
   </div>
-</div>
+
+</div><!-- /#app -->
 
 <!-- ══════════ TOAST ══════════ -->
 <div id="toast"></div>
@@ -1663,49 +1659,6 @@ function renderRichContent(blocks) {
 }
 
 /* ── List loading ────────────────────────────────── */
-async function loadList(fresh=false) {
-  if (fresh) { listLastDoc = null; allListDocs = []; }
-  try {
-    let snap;
-    try {
-      // Primary: compound query with index (category + date desc)
-      let q;
-      if (filterCat) {
-        q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
-      } else {
-        q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
-      }
-      if (listLastDoc) q = query(collection(db,COL),
-        ...(filterCat ? [where("category","==",filterCat)] : []),
-        orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
-      snap = await getDocs(q);
-    } catch(indexErr) {
-      // Fallback: no orderBy — fetch all for category, sort client-side
-      // (works without a composite index; use while index is being built)
-      console.warn("Index not ready, using fallback query:", indexErr.message);
-      const fallbackQ = filterCat
-        ? query(collection(db,COL), where("category","==",filterCat), limit(PAGE * 3))
-        : query(collection(db,COL), limit(PAGE * 3));
-      snap = await getDocs(fallbackQ);
-      // Sort by date desc client-side
-      const sorted = [...snap.docs].sort((a,b) => {
-        const da = a.data().date?.toMillis?.() ?? 0;
-        const db2 = b.data().date?.toMillis?.() ?? 0;
-        return db2 - da;
-      });
-      // Rebuild a snap-like object
-      snap = { docs: sorted, size: sorted.length };
-    }
-    if (fresh) allListDocs = [];
-    snap.docs.forEach(d => allListDocs.push(d));
-    listLastDoc = snap.docs[snap.docs.length-1];
-    document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
-    renderList();
-  } catch(e) {
-    console.error("loadList error:", e);
-    document.getElementById("article-list").innerHTML = `<div class="list-empty"><i class="ti ti-alert-circle"></i>${e.message}</div>`;
-  }
-}
 window.listLoadMore = () => loadList(false);
 
 function renderList() {
@@ -1999,6 +1952,134 @@ window.openPreview = openPreview;
 window.closePreview = closePreview;
 window.escHtml = escHtml;
 
+/* ── loadList: handles missing composite index gracefully ── */
+async function loadList(fresh=false) {
+  if (fresh) { listLastDoc = null; allListDocs = []; }
+  try {
+    let snap;
+    try {
+      // Primary path: uses composite index (category + date desc)
+      let q;
+      if (filterCat) {
+        q = listLastDoc
+          ? query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
+          : query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+      } else {
+        q = listLastDoc
+          ? query(collection(db,COL), orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE))
+          : query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+      }
+      snap = await getDocs(q);
+    } catch(indexErr) {
+      // Fallback while index is being built — fetch without orderBy, sort client-side
+      console.warn("Index not ready, falling back to client-side sort:", indexErr.message);
+      const fallbackQ = filterCat
+        ? query(collection(db,COL), where("category","==",filterCat), limit(PAGE * 5))
+        : query(collection(db,COL), limit(PAGE * 5));
+      const rawSnap = await getDocs(fallbackQ);
+      const sorted = [...rawSnap.docs].sort((a,b) => {
+        const ta = a.data().date?.toMillis?.() ?? 0;
+        const tb = b.data().date?.toMillis?.() ?? 0;
+        return tb - ta;
+      });
+      snap = { docs: sorted, size: sorted.length };
+    }
+    if (fresh) allListDocs = [];
+    snap.docs.forEach(d => allListDocs.push(d));
+    listLastDoc = snap.docs[snap.docs.length - 1];
+    document.getElementById("list-load-more").style.display = snap.docs.length === PAGE ? "" : "none";
+    renderList();
+  } catch(e) {
+    console.error("loadList error:", e);
+    document.getElementById("article-list").innerHTML =
+      `<div class="list-empty"><i class="ti ti-alert-circle"></i>${e.message}</div>`;
+  }
+}
+window.listLoadMore = () => loadList(false);
+
+/* ══════════ LIVE TICKER MANAGER ══════════ */
+const TICKER_COL = "ticker_items";
+let _tickerUnsub  = null;
+let _tickerOpen   = false;
+
+window.toggleTickerPanel = function() {
+  _tickerOpen = !_tickerOpen;
+  const body  = document.getElementById("body");
+  const panel = document.getElementById("ticker-panel");
+  const btn   = document.getElementById("btn-ticker");
+
+  if (_tickerOpen) {
+    body.style.display  = "none";
+    panel.style.display = "block";
+    btn.classList.add("ticker-active");
+    _startTickerSync();
+  } else {
+    panel.style.display = "none";
+    body.style.display  = "";
+    btn.classList.remove("ticker-active");
+    if (_tickerUnsub) { _tickerUnsub(); _tickerUnsub = null; }
+  }
+};
+
+function _startTickerSync() {
+  if (_tickerUnsub) _tickerUnsub();
+  const q = query(collection(db, TICKER_COL), orderBy("createdAt", "asc"));
+  _tickerUnsub = onSnapshot(q, snap => {
+    const list  = document.getElementById("ti-list");
+    const count = document.getElementById("ti-count");
+    if (!list) return;
+    if (count) count.textContent = snap.empty ? "" : ` (${snap.size})`;
+    if (snap.empty) {
+      list.innerHTML = `<div class="tp-empty"><i class="ti ti-inbox"></i>No items yet. Add one above — it goes live instantly.</div>`;
+      return;
+    }
+    list.innerHTML = snap.docs.map(d => {
+      const v  = d.data();
+      const ts = v.createdAt?.toDate
+        ? v.createdAt.toDate().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})
+        : "—";
+      return `<div class="tp-item">
+        <div class="tp-item-ico"><i class="ti ${escHtml(v.icon||"ti-star")}"></i></div>
+        <div class="tp-item-txt">${escHtml(v.text||"")}</div>
+        <div class="tp-item-date">${ts}</div>
+        <button class="tp-del" onclick="deleteTickerItem('${d.id}')" title="Delete"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join("");
+  }, err => {
+    const list = document.getElementById("ti-list");
+    if (list) list.innerHTML = `<div class="tp-empty"><i class="ti ti-alert-circle"></i>${escHtml(err.message)}</div>`;
+  });
+}
+
+window.addTickerItem = async function() {
+  const textEl = document.getElementById("ti-text");
+  const iconEl = document.getElementById("ti-icon");
+  const btn    = document.getElementById("ti-add-btn");
+  const text   = textEl?.value.trim();
+  const icon   = iconEl?.value || "ti-star";
+  if (!text) { showToast("Please enter ticker text.", "error"); textEl?.focus(); return; }
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
+    textEl.value = "";
+    iconEl.value = "ti-star";
+    showToast("Ticker item added — live for users now.");
+  } catch(e) {
+    showToast("Failed: " + e.message, "error");
+  }
+  btn.disabled = false;
+};
+
+window.deleteTickerItem = async function(id) {
+  if (!confirm("Remove this ticker item?")) return;
+  try {
+    await deleteDoc(doc(db, TICKER_COL, id));
+    showToast("Ticker item removed.");
+  } catch(e) {
+    showToast("Failed: " + e.message, "error");
+  }
+};
+
 /* ── Build table grid on init ──────────────────── */
 (function buildTblGrid(){
   const MAX = 8;
@@ -2039,94 +2120,6 @@ window.escHtml = escHtml;
   );
   observer.observe(sentinel);
 })();
-
-/* ══════════ LIVE TICKER MANAGER ══════════ */
-const TICKER_COL = "ticker_items";
-let _tickerUnsub = null;
-let _tickerPanelOpen = false;
-
-window.toggleTickerPanel = function() {
-  _tickerPanelOpen = !_tickerPanelOpen;
-  const panel    = document.getElementById("ticker-panel");
-  const body     = document.getElementById("body");
-  const tabBtn   = document.getElementById("btn-ticker-tab");
-
-  if (_tickerPanelOpen) {
-    panel.classList.add("active");
-    body.style.display = "none";
-    tabBtn.classList.add("active-tab");
-    _startTickerSync();
-  } else {
-    panel.classList.remove("active");
-    body.style.display = "";
-    tabBtn.classList.remove("active-tab");
-    if (_tickerUnsub) { _tickerUnsub(); _tickerUnsub = null; }
-  }
-};
-
-function _startTickerSync() {
-  if (_tickerUnsub) { _tickerUnsub(); }
-  const q = query(collection(db, TICKER_COL), orderBy("createdAt", "asc"));
-  _tickerUnsub = onSnapshot(q, snap => {
-    const list  = document.getElementById("ti-list");
-    const count = document.getElementById("ti-count");
-    if (!list) return;
-    if (count) count.textContent = `(${snap.size})`;
-    if (snap.empty) {
-      list.innerHTML = `<div class="tp-empty"><i class="ti ti-inbox"></i>No items yet — add one above. It goes live instantly.</div>`;
-      return;
-    }
-    list.innerHTML = snap.docs.map(d => {
-      const v  = d.data();
-      const ts = v.createdAt?.toDate
-        ? v.createdAt.toDate().toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"})
-        : "—";
-      return `<div class="tp-item">
-        <div class="tp-item-ico"><i class="ti ${escHtml(v.icon || "ti-star")}"></i></div>
-        <div class="tp-item-txt">${escHtml(v.text || "")}</div>
-        <div class="tp-item-date">${ts}</div>
-        <button class="tp-del" onclick="deleteTickerItem('${d.id}')" title="Delete item"><i class="ti ti-trash"></i></button>
-      </div>`;
-    }).join("");
-  }, err => {
-    console.error("Ticker snapshot error:", err);
-    const list = document.getElementById("ti-list");
-    if (list) list.innerHTML = `<div class="tp-empty"><i class="ti ti-alert-circle"></i>Error loading items: ${escHtml(err.message)}</div>`;
-  });
-}
-
-window.addTickerItem = async function() {
-  const textEl = document.getElementById("ti-text");
-  const iconEl = document.getElementById("ti-icon");
-  const btn    = document.getElementById("ti-add-btn");
-  const text   = textEl?.value.trim();
-  const icon   = iconEl?.value || "ti-star";
-  if (!text) { showToast("Please enter ticker text.", "error"); textEl?.focus(); return; }
-  btn.disabled = true;
-  try {
-    await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
-    textEl.value = "";
-    showToast("Ticker item added — live for users now.", "success");
-  } catch(e) {
-    console.error(e);
-    showToast("Failed to add: " + e.message, "error");
-  }
-  btn.disabled = false;
-};
-
-window.deleteTickerItem = async function(id) {
-  if (!confirm("Remove this ticker item? It disappears from the user site immediately.")) return;
-  try {
-    await deleteDoc(doc(db, TICKER_COL, id));
-    showToast("Ticker item removed.", "success");
-  } catch(e) {
-    showToast("Failed to delete: " + e.message, "error");
-  }
-};
-
-window.addTickerItem    = addTickerItem;
-window.deleteTickerItem = deleteTickerItem;
-window.toggleTickerPanel = toggleTickerPanel;
 </script>
 </body>
 </html>
