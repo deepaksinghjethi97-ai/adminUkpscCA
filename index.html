@@ -907,19 +907,21 @@ function saveDraftToLS() {
 
 function setAutosaveStatus(status) {
   const el  = document.getElementById("autosave-status");
-  const txt = document.getElementById("autosave-txt");
-  el.className = status;
+  if (!el) return; // editor not mounted yet
   if (status === "saving") {
-    el.innerHTML = `<i class="ti ti-loader"></i>`;
-    txt.textContent = "Saving…";
+    el.className = "saving";
+    el.innerHTML = `<i class="ti ti-loader"></i> <span>Saving…</span>`;
   } else if (status === "saved") {
     const t = new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});
-    el.innerHTML = `<i class="ti ti-circle-check"></i>`;
-    txt.textContent = `Saved ${t}`;
-    setTimeout(()=>{ txt.textContent = `Draft saved`; }, 3000);
+    el.className = "saved";
+    el.innerHTML = `<i class="ti ti-circle-check"></i> <span>Saved ${t}</span>`;
+    setTimeout(() => {
+      const el2 = document.getElementById("autosave-status");
+      if (el2) el2.innerHTML = `<i class="ti ti-circle-check"></i> <span>Draft saved</span>`;
+    }, 3000);
   } else {
+    el.className = "";
     el.innerHTML = "";
-    txt.textContent = "";
   }
 }
 
@@ -1478,8 +1480,11 @@ function serializeNode(node, blocks) {
     }
     case "table": {
       const headers = [...node.querySelectorAll("thead th")].map(th => th.innerHTML);
-      const rows = [...node.querySelectorAll("tbody tr")].map(tr =>
-        [...tr.querySelectorAll("td")].map(td => td.innerHTML));
+      // Firestore doesn't support nested arrays — store each row as an object
+      // with a "cells" string (pipe-delimited) to survive Firestore round-trip
+      const rows = [...node.querySelectorAll("tbody tr")].map(tr => ({
+        cells: [...tr.querySelectorAll("td")].map(td => td.innerHTML).join("||CELL||")
+      }));
       blocks.push({ type:"table", headers, rows });
       break;
     }
@@ -1544,9 +1549,18 @@ function deserializeBlocks(blocks) {
       }
       case "table": {
         const hdr  = (b.headers||[]).map(h => `<th>${h||""}</th>`).join("");
-        const rows = (b.rows||[]).map(r =>
-          `<tr>${r.map(c => `<td>${c||""}</td>`).join("")}</tr>`
-        ).join("");
+        const rows = (b.rows||[]).map(r => {
+          // Support both old nested-array format and new flattened format
+          let cells;
+          if (typeof r === "object" && r.cells !== undefined) {
+            cells = r.cells.split("||CELL||");
+          } else if (Array.isArray(r)) {
+            cells = r; // legacy
+          } else {
+            cells = [r];
+          }
+          return `<tr>${cells.map(c => `<td>${c||""}</td>`).join("")}</tr>`;
+        }).join("");
         return `<table><thead><tr>${hdr}</tr></thead><tbody>${rows}</tbody></table>`;
       }
       case "image": return b.url
