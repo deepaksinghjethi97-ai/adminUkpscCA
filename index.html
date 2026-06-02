@@ -434,6 +434,39 @@ input,select,textarea{font-family:var(--font)}
   .doc-body p,.doc-body li{color:#222}
   .doc-body th{background:#eee;color:#000}
 }
+
+/* ── TICKER PANEL ─────────────────────────────── */
+#ticker-panel{display:none;flex:1;overflow-y:auto;padding:28px 32px;background:var(--bg)}
+#ticker-panel.active{display:block}
+.tp-wrap{max-width:640px;margin:0 auto}
+.tp-section-hdr{margin-bottom:22px}
+.tp-section-hdr h2{font-size:18px;font-weight:700;display:flex;align-items:center;gap:9px}
+.tp-section-hdr h2 i{color:var(--accent)}
+.tp-section-hdr p{font-size:12px;color:var(--text3);margin-top:4px}
+.tp-add-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin-bottom:22px}
+.tp-add-card-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.7px;text-transform:uppercase;font-family:var(--mono);margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.tp-add-card-title i{color:var(--accent);font-size:14px}
+.tp-field{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--font);font-size:13px;outline:none;transition:border-color .15s;margin-bottom:10px}
+.tp-field:focus{border-color:var(--accent)}
+.tp-field::placeholder{color:var(--text3)}
+.tp-row{display:flex;gap:10px;align-items:flex-start}
+.tp-select{flex:0 0 160px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 13px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
+.tp-select:focus{border-color:var(--accent)}
+.tp-btn-add{background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.35);border-radius:8px;padding:10px 20px;color:var(--accent);font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;transition:.15s;white-space:nowrap;cursor:pointer}
+.tp-btn-add:hover{background:rgba(79,110,247,.28);border-color:var(--accent)}
+.tp-btn-add:disabled{opacity:.4;cursor:not-allowed}
+.tp-list-hdr{font-size:11px;font-weight:700;color:var(--text3);font-family:var(--mono);letter-spacing:.5px;margin-bottom:9px;display:flex;align-items:center;gap:6px}
+.tp-list-hdr .tp-cnt{color:var(--accent);margin-left:4px}
+.tp-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:.15s}
+.tp-item:hover{border-color:var(--border2)}
+.tp-item-ico{width:34px;height:34px;background:rgba(79,110,247,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:16px;flex-shrink:0}
+.tp-item-txt{flex:1;font-size:13px;color:var(--text);line-height:1.45;min-width:0;word-break:break-word}
+.tp-item-date{font-size:10px;color:var(--text3);font-family:var(--mono);white-space:nowrap;flex-shrink:0}
+.tp-del{background:transparent;border:1px solid transparent;border-radius:7px;padding:5px 8px;color:var(--text3);font-size:14px;transition:.15s;line-height:1;flex-shrink:0;cursor:pointer}
+.tp-del:hover{color:var(--red);border-color:rgba(247,90,124,.3);background:rgba(247,90,124,.08)}
+.tp-empty{text-align:center;padding:40px 20px;color:var(--text3);font-size:13px}
+.tp-empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.3}
+.btn-outline.active-tab{background:rgba(79,110,247,.12);border-color:rgba(79,110,247,.4);color:var(--accent)}
 </style>
 </head>
 <body>
@@ -482,6 +515,7 @@ input,select,textarea{font-family:var(--font)}
     </div>
     <div class="hdr-right">
       <span style="font-size:12px;color:var(--text3)" id="admin-email"></span>
+      <button class="btn-outline" id="btn-ticker-tab" onclick="toggleTickerPanel()"><i class="ti ti-broadcast"></i> Live Ticker</button>
       <a href="index.html" target="_blank" class="btn-outline"><i class="ti ti-external-link"></i> View Site</a>
       <button class="btn-outline" onclick="doLogout()"><i class="ti ti-logout"></i> Logout</button>
     </div>
@@ -757,6 +791,47 @@ input,select,textarea{font-family:var(--font)}
         </div>
       </div>
     </div>
+
+    <!-- TICKER PANEL: toggles in place of the editor layout -->
+    <div id="ticker-panel">
+      <div class="tp-wrap">
+        <div class="tp-section-hdr">
+          <h2><i class="ti ti-broadcast"></i> Live Ticker Manager</h2>
+          <p>Items appear in the scrolling news bar on the user site in real-time.</p>
+        </div>
+
+        <div class="tp-add-card">
+          <div class="tp-add-card-title"><i class="ti ti-plus"></i> Add New Item</div>
+          <input class="tp-field" id="ti-text" placeholder="e.g. India wins T20 World Cup 2024 · beats South Africa in final" maxlength="200"/>
+          <div class="tp-row">
+            <select class="tp-select" id="ti-icon">
+              <option value="ti-star">⭐ Default</option>
+              <option value="ti-rocket">🚀 Rocket</option>
+              <option value="ti-trophy">🏆 Trophy</option>
+              <option value="ti-shield">🛡 Shield</option>
+              <option value="ti-chess">♟ Chess</option>
+              <option value="ti-mountain">⛰ Mountain</option>
+              <option value="ti-award">🏅 Award</option>
+              <option value="ti-flag">🚩 Flag</option>
+              <option value="ti-world">🌍 World</option>
+              <option value="ti-cpu">💻 Tech</option>
+              <option value="ti-building-bank">🏛 Governance</option>
+              <option value="ti-stethoscope">⚕ Health</option>
+              <option value="ti-users">👥 People</option>
+              <option value="ti-bolt">⚡ Bolt</option>
+              <option value="ti-fire">🔥 Fire</option>
+            </select>
+            <button class="tp-btn-add" id="ti-add-btn" onclick="addTickerItem()">
+              <i class="ti ti-plus"></i> Add to Ticker
+            </button>
+          </div>
+        </div>
+
+        <div class="tp-list-hdr"><i class="ti ti-list"></i> Current Items <span class="tp-cnt" id="ti-count"></span></div>
+        <div id="ti-list"><div class="tp-empty"><i class="ti ti-loader"></i>Loading…</div></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -852,7 +927,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
 import {
   getFirestore, collection, query, where, orderBy, limit,
   startAfter, getDocs, getDoc, addDoc, updateDoc, deleteDoc,
-  doc, Timestamp, serverTimestamp, writeBatch
+  doc, Timestamp, serverTimestamp, writeBatch, onSnapshot
 } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
 /* ── Firebase init ───────────────────────────────── */
@@ -1944,6 +2019,94 @@ window.escHtml = escHtml;
   );
   observer.observe(sentinel);
 })();
+
+/* ══════════ LIVE TICKER MANAGER ══════════ */
+const TICKER_COL = "ticker_items";
+let _tickerUnsub = null;
+let _tickerPanelOpen = false;
+
+window.toggleTickerPanel = function() {
+  _tickerPanelOpen = !_tickerPanelOpen;
+  const panel    = document.getElementById("ticker-panel");
+  const body     = document.getElementById("body");
+  const tabBtn   = document.getElementById("btn-ticker-tab");
+
+  if (_tickerPanelOpen) {
+    panel.classList.add("active");
+    body.style.display = "none";
+    tabBtn.classList.add("active-tab");
+    _startTickerSync();
+  } else {
+    panel.classList.remove("active");
+    body.style.display = "";
+    tabBtn.classList.remove("active-tab");
+    if (_tickerUnsub) { _tickerUnsub(); _tickerUnsub = null; }
+  }
+};
+
+function _startTickerSync() {
+  if (_tickerUnsub) { _tickerUnsub(); }
+  const q = query(collection(db, TICKER_COL), orderBy("createdAt", "asc"));
+  _tickerUnsub = onSnapshot(q, snap => {
+    const list  = document.getElementById("ti-list");
+    const count = document.getElementById("ti-count");
+    if (!list) return;
+    if (count) count.textContent = `(${snap.size})`;
+    if (snap.empty) {
+      list.innerHTML = `<div class="tp-empty"><i class="ti ti-inbox"></i>No items yet — add one above. It goes live instantly.</div>`;
+      return;
+    }
+    list.innerHTML = snap.docs.map(d => {
+      const v  = d.data();
+      const ts = v.createdAt?.toDate
+        ? v.createdAt.toDate().toLocaleDateString("en-IN", {day:"2-digit", month:"short", year:"numeric"})
+        : "—";
+      return `<div class="tp-item">
+        <div class="tp-item-ico"><i class="ti ${escHtml(v.icon || "ti-star")}"></i></div>
+        <div class="tp-item-txt">${escHtml(v.text || "")}</div>
+        <div class="tp-item-date">${ts}</div>
+        <button class="tp-del" onclick="deleteTickerItem('${d.id}')" title="Delete item"><i class="ti ti-trash"></i></button>
+      </div>`;
+    }).join("");
+  }, err => {
+    console.error("Ticker snapshot error:", err);
+    const list = document.getElementById("ti-list");
+    if (list) list.innerHTML = `<div class="tp-empty"><i class="ti ti-alert-circle"></i>Error loading items: ${escHtml(err.message)}</div>`;
+  });
+}
+
+window.addTickerItem = async function() {
+  const textEl = document.getElementById("ti-text");
+  const iconEl = document.getElementById("ti-icon");
+  const btn    = document.getElementById("ti-add-btn");
+  const text   = textEl?.value.trim();
+  const icon   = iconEl?.value || "ti-star";
+  if (!text) { showToast("Please enter ticker text.", "error"); textEl?.focus(); return; }
+  btn.disabled = true;
+  try {
+    await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
+    textEl.value = "";
+    showToast("Ticker item added — live for users now.", "success");
+  } catch(e) {
+    console.error(e);
+    showToast("Failed to add: " + e.message, "error");
+  }
+  btn.disabled = false;
+};
+
+window.deleteTickerItem = async function(id) {
+  if (!confirm("Remove this ticker item? It disappears from the user site immediately.")) return;
+  try {
+    await deleteDoc(doc(db, TICKER_COL, id));
+    showToast("Ticker item removed.", "success");
+  } catch(e) {
+    showToast("Failed to delete: " + e.message, "error");
+  }
+};
+
+window.addTickerItem    = addTickerItem;
+window.deleteTickerItem = deleteTickerItem;
+window.toggleTickerPanel = toggleTickerPanel;
 </script>
 </body>
 </html>
