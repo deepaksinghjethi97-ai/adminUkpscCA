@@ -1666,16 +1666,36 @@ function renderRichContent(blocks) {
 async function loadList(fresh=false) {
   if (fresh) { listLastDoc = null; allListDocs = []; }
   try {
-    let q;
-    if (filterCat) {
-      q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
-    } else {
-      q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+    let snap;
+    try {
+      // Primary: compound query with index (category + date desc)
+      let q;
+      if (filterCat) {
+        q = query(collection(db,COL), where("category","==",filterCat), orderBy("date","desc"), limit(PAGE));
+      } else {
+        q = query(collection(db,COL), orderBy("date","desc"), limit(PAGE));
+      }
+      if (listLastDoc) q = query(collection(db,COL),
+        ...(filterCat ? [where("category","==",filterCat)] : []),
+        orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
+      snap = await getDocs(q);
+    } catch(indexErr) {
+      // Fallback: no orderBy — fetch all for category, sort client-side
+      // (works without a composite index; use while index is being built)
+      console.warn("Index not ready, using fallback query:", indexErr.message);
+      const fallbackQ = filterCat
+        ? query(collection(db,COL), where("category","==",filterCat), limit(PAGE * 3))
+        : query(collection(db,COL), limit(PAGE * 3));
+      snap = await getDocs(fallbackQ);
+      // Sort by date desc client-side
+      const sorted = [...snap.docs].sort((a,b) => {
+        const da = a.data().date?.toMillis?.() ?? 0;
+        const db2 = b.data().date?.toMillis?.() ?? 0;
+        return db2 - da;
+      });
+      // Rebuild a snap-like object
+      snap = { docs: sorted, size: sorted.length };
     }
-    if (listLastDoc) q = query(collection(db,COL),
-      ...(filterCat ? [where("category","==",filterCat)] : []),
-      orderBy("date","desc"), startAfter(listLastDoc), limit(PAGE));
-    const snap = await getDocs(q);
     if (fresh) allListDocs = [];
     snap.docs.forEach(d => allListDocs.push(d));
     listLastDoc = snap.docs[snap.docs.length-1];
