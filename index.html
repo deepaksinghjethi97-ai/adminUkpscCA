@@ -1017,7 +1017,13 @@ const app = initializeApp({
 });
 const auth = getAuth(app);
 const db   = getFirestore(app);
+window._db = db;
 const COL  = "articles";
+window._COL = COL;
+window._Timestamp = Timestamp;
+window._serverTimestamp = serverTimestamp;
+window._addDoc = addDoc;
+window._collection = collection;
 const PAGE = 20;
 
 /* ── State ───────────────────────────────────────── */
@@ -2170,6 +2176,8 @@ window.showToast = showToast;
 window.openPreview = openPreview;
 window.closePreview = closePreview;
 window.escHtml = escHtml;
+window.deserializeBlocks = deserializeBlocks;
+window.loadList = loadList;
 
 /* ── Build table grid on init ──────────────────── */
 (function buildTblGrid(){
@@ -2452,22 +2460,29 @@ window.doImportArticles = async function() {
 
       // Build rawHTML from blocks for Firestore fidelity
       const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = deserializeBlocks(contentBlocks);
+      tempDiv.innerHTML = window.deserializeBlocks(contentBlocks);
       const rawHTML = tempDiv.innerHTML;
+
+      const _Ts  = window._Timestamp;
+      const _sts = window._serverTimestamp;
+      const _add = window._addDoc;
+      const _col = window._collection;
+      const _db  = window._db;
+      const _COL = window._COL;
 
       const payload = {
         title:      (a.title||"").trim(),
         category:   a.category || "",
         importance: a.importance || "medium",
-        date:       Timestamp.fromDate(new Date(a.date)),
+        date:       _Ts.fromDate(new Date(a.date)),
         tags:       Array.isArray(a.tags) ? a.tags : [],
         content:    contentBlocks,
         rawHTML,
         published:  a.published !== undefined ? !!a.published : true,
-        createdAt:  serverTimestamp(),
-        updatedAt:  serverTimestamp()
+        createdAt:  _sts(),
+        updatedAt:  _sts()
       };
-      await addDoc(collection(db, COL), payload);
+      await _add(_col(_db, _COL), payload);
       successCount++;
     } catch(err) {
       console.error("Import failed for:", a.title, err);
@@ -2476,13 +2491,13 @@ window.doImportArticles = async function() {
   }
   progressBar.style.width = "100%";
   statusText.textContent = `Done! ${successCount} imported${failCount ? ", " + failCount + " failed" : ""}`;
-  showToast(
+  window.showToast(
     successCount > 0
       ? `✓ ${successCount} article${successCount!==1?"s":""} imported successfully!${failCount?" ("+failCount+" failed)":""}`
       : "Import failed for all articles.",
     successCount > 0 ? "success" : "error"
   );
-  loadList(true);
+  window.loadList(true);
   setTimeout(() => closeImportModal(), 1800);
 };
 
@@ -2625,7 +2640,7 @@ window.downloadTemplate = function() {
   a.download = "ca_hub_article_template.json";
   a.click();
   URL.revokeObjectURL(url);
-  showToast("Template JSON downloaded!", "success");
+  window.showToast("Template JSON downloaded!", "success");
 };
 </script>
 
