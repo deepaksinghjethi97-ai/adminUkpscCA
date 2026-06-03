@@ -422,6 +422,20 @@ input,select,textarea{font-family:var(--font)}
   .tb-btn{padding:3px 5px;min-width:24px}
 }
 
+/* ── UX IMPROVEMENTS ───────────────────────────── */
+/* Delete button separated with left border for safety */
+.btn-delete{margin-left:6px;border-left:1px solid var(--border2)!important;padding-left:16px!important}
+/* Draft restore bar more prominent */
+#draft-restore-bar{background:rgba(247,185,61,.07);border-bottom:2px solid rgba(247,185,61,.35)!important}
+/* Article list item — improve readability */
+.art-item .ai-title{font-size:13px}
+/* Word count bar friendlier */
+.doc-wc-bar{font-size:11px;color:var(--text3);font-family:var(--mono)}
+/* Panel header sub text */
+.panel-hdr h3{display:flex;align-items:center;gap:6px}
+/* Ticker preview bar */
+#tp-preview-text{font-size:12px;color:var(--text2)}
+
 /* ── TICKER PANEL ──────────────────────────────── */
 /* #app is display:flex + flex-direction:column, so children need flex:1 to fill */
 #ticker-panel{
@@ -531,8 +545,9 @@ input,select,textarea{font-family:var(--font)}
 
   <!-- Draft restore bar -->
   <div id="draft-restore-bar">
-    <p><i class="ti ti-clock" style="margin-right:4px"></i>You have an unsaved draft. Would you like to restore it?</p>
-    <button class="btn-restore" onclick="restoreDraft()">Restore Draft</button>
+    <i class="ti ti-alert-circle" style="color:var(--amber);font-size:16px;flex-shrink:0"></i>
+    <p><strong style="color:var(--amber)">Unsaved draft found!</strong> You were working on an article that wasn't saved. Restore it to continue where you left off.</p>
+    <button class="btn-restore" onclick="restoreDraft()"><i class="ti ti-history" style="margin-right:4px"></i>Restore Draft</button>
     <button class="btn-discard" onclick="discardDraft()">Discard</button>
   </div>
 
@@ -540,9 +555,12 @@ input,select,textarea{font-family:var(--font)}
     <!-- LEFT: article list -->
     <div id="left-panel">
       <div class="panel-hdr">
-        <h3>Articles</h3>
+        <div>
+          <h3>Articles <span id="list-count-badge" style="background:rgba(79,110,247,.15);color:var(--accent);border:1px solid rgba(79,110,247,.25);border-radius:20px;font-size:10px;font-weight:600;padding:1px 7px;margin-left:4px;vertical-align:middle"></span></h3>
+          <div style="font-size:10px;color:var(--text3);margin-top:1px">Click any article to edit it</div>
+        </div>
         <div class="panel-hdr-btns">
-          <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New</button>
+          <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New Article</button>
         </div>
       </div>
       <div class="panel-filters">
@@ -604,26 +622,27 @@ input,select,textarea{font-family:var(--font)}
     <!-- RIGHT: editor -->
     <div id="right-panel">
       <div class="editor-placeholder" id="editor-placeholder">
-        <i class="ti ti-edit"></i>
-        <p>Select an article or create a new one</p>
+        <i class="ti ti-file-pencil" style="font-size:52px;opacity:.2;color:var(--accent)"></i>
+        <p style="font-size:15px;font-weight:600;color:var(--text2)">Nothing open yet</p>
+        <p style="font-size:12px;color:var(--text3);text-align:center;max-width:240px;line-height:1.7">Pick an article from the left to edit it, or click <strong style="color:var(--accent)">+ New Article</strong> to write something fresh.</p>
       </div>
       <div id="editor-form">
         <div class="editor-bar">
           <div class="editor-bar-left">
-            <i class="ti ti-edit" style="font-size:16px;color:var(--accent)"></i>
+            <i class="ti ti-file-pencil" style="font-size:16px;color:var(--accent)"></i>
             <h3 id="editor-mode-label">New Article</h3>
             <div id="autosave-status"><i class="ti ti-circle-check"></i> <span id="autosave-txt">—</span></div>
           </div>
           <div class="editor-bar-right">
-            <div class="draft-toggle">
+            <div class="draft-toggle" title="Toggle between Draft (not visible to students) and Published (visible to all)">
               <label class="toggle-switch"><input type="checkbox" id="f-published"/><span class="toggle-slider"></span></label>
               <label for="f-published" id="pub-label" style="font-size:11px;color:var(--text3)">Draft</label>
             </div>
-            <button class="btn-cancel" onclick="cancelEdit()"><i class="ti ti-x"></i> Cancel</button>
-            <button class="btn-preview" onclick="openPreview()"><i class="ti ti-eye"></i> <span>Preview</span></button>
-            <button class="btn-duplicate" id="btn-duplicate" onclick="duplicateArticle()" style="display:none"><i class="ti ti-copy"></i> <span>Duplicate</span></button>
-            <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none"><i class="ti ti-trash"></i></button>
-            <button class="btn-save" id="btn-save" onclick="saveArticle()"><i class="ti ti-device-floppy"></i> Save</button>
+            <button class="btn-cancel" onclick="cancelEdit()" title="Discard changes and close"><i class="ti ti-x"></i> Cancel</button>
+            <button class="btn-preview" onclick="openPreview()" title="See how students will read this article"><i class="ti ti-eye"></i> <span>Preview</span></button>
+            <button class="btn-duplicate" id="btn-duplicate" onclick="duplicateArticle()" style="display:none" title="Make a copy of this article"><i class="ti ti-copy"></i> <span>Duplicate</span></button>
+            <button class="btn-save" id="btn-save" onclick="saveArticle()" title="Save article to Firestore"><i class="ti ti-device-floppy"></i> Save</button>
+            <button class="btn-delete" id="btn-delete" onclick="confirmDelete()" style="display:none" title="Permanently delete this article"><i class="ti ti-trash"></i></button>
           </div>
         </div>
         <!-- Floating toolbar: appears here (above scroll) when user scrolls past the metadata fields -->
@@ -632,12 +651,12 @@ input,select,textarea{font-family:var(--font)}
           <div class="form-row full">
             <div class="form-group">
               <label>Title <span class="req">*</span></label>
-              <input id="f-title" placeholder="Enter article title…" oninput="scheduleDraftSave()"/>
+              <input id="f-title" placeholder="Enter a clear, descriptive article title…" oninput="scheduleDraftSave()"/>
             </div>
           </div>
           <div class="form-row three">
             <div class="form-group">
-              <label>Category <span class="req">*</span></label>
+              <label>Category <span class="req">*</span> <span style="font-size:10px;color:var(--text3);font-weight:400">(determines where students find this)</span></label>
               <select id="f-category" onchange="scheduleDraftSave()">
                 <option value="">— Select —</option>
                 <optgroup label="National">
@@ -679,7 +698,7 @@ input,select,textarea{font-family:var(--font)}
               </select>
             </div>
             <div class="form-group">
-              <label>Importance</label>
+              <label>Importance <span style="font-size:10px;color:var(--text3);font-weight:400">(priority for students)</span></label>
               <select id="f-importance" onchange="scheduleDraftSave()">
                 <option value="high">🔴 High — Must Know</option>
                 <option value="medium">🟡 Medium — Important</option>
@@ -687,13 +706,13 @@ input,select,textarea{font-family:var(--font)}
               </select>
             </div>
             <div class="form-group">
-              <label>Date <span class="req">*</span></label>
+              <label>Date <span class="req">*</span> <span style="font-size:10px;color:var(--text3);font-weight:400">(when it happened)</span></label>
               <input type="date" id="f-date" onchange="scheduleDraftSave()"/>
             </div>
           </div>
           <div class="form-row full">
             <div class="form-group tag-group-wrap">
-              <label>Tags</label>
+              <label>Tags <span style="font-size:10px;color:var(--text3);font-weight:400">(optional — helps students search, e.g. UPSC, India, Science)</span></label>
               <div class="tag-chips-wrap" id="tag-chips-wrap" onclick="focusTagInput()">
                 <input class="tag-chip-input" id="tag-chip-input" placeholder="Type a tag and press Enter…" autocomplete="off"
                   oninput="onTagInput(this)" onkeydown="onTagKeydown(event)" onkeyup="onTagKeyup(event)"/>
@@ -706,7 +725,7 @@ input,select,textarea{font-family:var(--font)}
           <div id="toolbar-sentinel" style="height:1px;margin-bottom:-1px"></div>
           <!-- ══ WYSIWYG DOCUMENT EDITOR ══ -->
           <div class="form-group" style="margin-bottom:6px">
-            <label>Article Content <span class="req">*</span></label>
+            <label>Article Content <span class="req">*</span> <span style="font-size:10px;color:var(--text3);font-weight:400">— use the toolbar above to format headings, lists, tables etc.</span></label>
           </div>
           <div class="doc-editor-wrap">
             <!-- Toolbar -->
@@ -803,13 +822,20 @@ input,select,textarea{font-family:var(--font)}
     <div class="tp-wrap">
       <div class="tp-hdr">
         <h2><i class="ti ti-broadcast"></i> Live Ticker Manager</h2>
-        <p>Manage the scrolling news bar on the user site. Changes reflect within 60 seconds.</p>
+        <p>The ticker is the scrolling banner at the top of the student site. Add important news items here — they appear for <strong style="color:var(--text2)">all students within 60 seconds</strong>, no page reload needed.</p>
       </div>
+
+      <!-- Live preview of ticker -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:10px 16px;margin-bottom:20px;display:flex;align-items:center;gap:10px;overflow:hidden">
+        <span style="background:rgba(61,224,160,.15);color:var(--green);border:1px solid rgba(61,224,160,.3);border-radius:5px;font-size:10px;font-weight:700;padding:2px 7px;white-space:nowrap;flex-shrink:0">PREVIEW</span>
+        <div style="font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="tp-preview-text">Items you add will scroll here for students →</div>
+      </div>
+
       <div class="tp-card">
         <div class="tp-card-lbl"><i class="ti ti-plus"></i> Add New Item</div>
-        <input class="tp-input" id="ti-text" placeholder="e.g. India wins T20 World Cup 2024 · beats South Africa in final" maxlength="200"/>
+        <input class="tp-input" id="ti-text" placeholder="e.g. India wins T20 World Cup 2024 · beats South Africa in final" maxlength="200" oninput="updateTickerPreview()"/>
         <div class="tp-row">
-          <select class="tp-select" id="ti-icon">
+          <select class="tp-select" id="ti-icon" onchange="updateTickerPreview()">
             <option value="ti-star">⭐  Default</option>
             <option value="ti-rocket">🚀  Rocket</option>
             <option value="ti-trophy">🏆  Trophy</option>
@@ -830,8 +856,9 @@ input,select,textarea{font-family:var(--font)}
             <i class="ti ti-plus"></i> Add to Ticker
           </button>
         </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:6px"><i class="ti ti-info-circle" style="margin-right:3px"></i>Keep it short and factual. Add the month/year at the end for context.</div>
       </div>
-      <div class="tp-list-hdr"><i class="ti ti-list"></i> Current Items<span class="tp-cnt" id="ti-count"></span></div>
+      <div class="tp-list-hdr"><i class="ti ti-list"></i> Current Items <span class="tp-cnt" id="ti-count"></span> <span style="color:var(--text3);font-weight:400;margin-left:6px">— students see all of these</span></div>
       <div id="ti-list"><div class="tp-empty"><i class="ti ti-inbox"></i>No items yet. Add one above.</div></div>
     </div>
   </div>
@@ -1771,9 +1798,24 @@ window.addTickerItem = async function() {
   try {
     await addDoc(collection(db, TICKER_COL), { text, icon, createdAt: serverTimestamp() });
     textEl.value = ""; iconEl.value = "ti-star";
-    showToast("Ticker item added — live for users now.");
+    updateTickerPreview();
+    showToast("Ticker item added — live for students now.");
   } catch(e) { showToast("Failed: " + e.message, "error"); }
   btn.disabled = false;
+};
+
+window.updateTickerPreview = function() {
+  const textEl    = document.getElementById("ti-text");
+  const iconEl    = document.getElementById("ti-icon");
+  const previewEl = document.getElementById("tp-preview-text");
+  if (!previewEl) return;
+  const text = textEl?.value.trim();
+  const icon = iconEl?.value || "ti-star";
+  if (text) {
+    previewEl.innerHTML = `<i class="ti ${escHtml(icon)}" style="margin-right:5px;color:var(--accent)"></i>${escHtml(text)}`;
+  } else {
+    previewEl.textContent = "Items you add will scroll here for students →";
+  }
 };
 
 window.deleteTickerItem = async function(id) {
@@ -1792,7 +1834,11 @@ function renderList() {
     ? allListDocs.filter(d => (d.data().title||"").toLowerCase().includes(search))
     : allListDocs;
   const list = document.getElementById("article-list");
-  if (!filtered.length) { list.innerHTML = `<div class="list-empty"><i class="ti ti-inbox"></i>No articles found.</div>`; return; }
+  // Update count badge
+  const badge = document.getElementById("list-count-badge");
+  if (badge) badge.textContent = filtered.length ? filtered.length : "";
+  if (!filtered.length) { list.innerHTML = `<div class="list-empty"><i class="ti ti-inbox"></i>${filterSearch ? "No articles match your search." : "No articles yet — click <strong>+ New Article</strong> to get started."}</div>`; return; }
+  const impLabel = { high:"🔴 Must Know", medium:"🟡 Important", low:"🟢 Good to Know" };
   list.innerHTML = filtered.map(d => {
     const data = d.data();
     const dotCls = data.importance==="high" ? "d-high" : data.importance==="medium" ? "d-med" : "d-low";
@@ -1801,13 +1847,15 @@ function renderList() {
       : data.date || "";
     const isDraft = data.published === false;
     const isSelected = selectedIds.has(d.id);
+    // Friendly category display
+    const catDisplay = (data.category||"").replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
     return `<div class="art-item${editingId===d.id?" selected":""}" data-id="${d.id}">
       <input type="checkbox" class="art-item-cb" ${isSelected?"checked":""} onchange="toggleBulkSelect(event,'${d.id}')" onclick="event.stopPropagation()"/>
       <div class="art-item-content" onclick="editArticle('${d.id}')">
-        <span class="ai-tag" style="background:rgba(79,110,247,.12);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${(data.category||"").toUpperCase()}</span>
+        <span class="ai-tag" style="background:rgba(79,110,247,.12);color:#7c9af7;border:1px solid rgba(79,110,247,.2)">${catDisplay||"UNCATEGORISED"}</span>
         ${isDraft ? `<span class="draft-chip"><i class="ti ti-pencil"></i> DRAFT</span>` : ""}
         <div class="ai-title">${escHtml(data.title||"Untitled")}</div>
-        <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr} <i class="ti ti-flame" style="margin-left:4px"></i>${data.importance||"—"}</div>
+        <div class="ai-meta"><i class="ti ti-calendar"></i>${dateStr} <span style="margin-left:4px">${impLabel[data.importance]||data.importance||""}</span></div>
       </div>
       <div class="art-dot ${dotCls}"></div>
     </div>`;
