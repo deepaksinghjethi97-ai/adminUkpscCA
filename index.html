@@ -72,6 +72,8 @@ input,select,textarea{font-family:var(--font)}
 .panel-hdr-btns{display:flex;gap:6px;align-items:center}
 .btn-add{background:var(--accent);border:none;border-radius:8px;padding:6px 14px;color:#fff;font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:.15s}
 .btn-add:hover{background:#3a5ce6}
+.btn-import{background:rgba(61,213,224,.12);border:1px solid rgba(61,213,224,.3);border-radius:8px;padding:6px 12px;color:var(--teal);font-size:12px;font-weight:600;display:flex;align-items:center;gap:5px;transition:.15s}
+.btn-import:hover{background:rgba(61,213,224,.2);border-color:var(--teal)}
 .panel-filters{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-shrink:0}
 .panel-filters select,.panel-filters input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:6px 9px;color:var(--text);font-size:11.5px;outline:none}
 .panel-filters select:focus,.panel-filters input:focus{border-color:var(--accent)}
@@ -474,6 +476,49 @@ input,select,textarea{font-family:var(--font)}
 .tp-empty i{font-size:40px;display:block;margin-bottom:10px;opacity:.3}
 .btn-outline.ticker-active{background:rgba(79,110,247,.15);border-color:rgba(79,110,247,.4);color:var(--accent)}
 
+/* ── IMPORT JSON MODAL ─────────────────────────── */
+#import-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+#import-overlay.open{display:flex}
+.import-modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);width:100%;max-width:640px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 64px rgba(0,0,0,.6);overflow:hidden}
+.import-modal-hdr{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.import-modal-hdr h3{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;color:var(--teal)}
+.import-modal-hdr h3 i{font-size:18px}
+.import-modal-body{padding:20px;overflow-y:auto;flex:1}
+.import-drop-zone{border:2px dashed var(--border2);border-radius:12px;padding:40px 20px;text-align:center;color:var(--text3);cursor:pointer;transition:.2s;position:relative;background:var(--bg3)}
+.import-drop-zone:hover,.import-drop-zone.drag-over{border-color:var(--teal);background:rgba(61,213,224,.05);color:var(--text)}
+.import-drop-zone i{font-size:40px;display:block;margin-bottom:10px;color:var(--teal);opacity:.6}
+.import-drop-zone p{font-size:13px;margin-bottom:6px}
+.import-drop-zone span{font-size:11px;color:var(--text3)}
+.import-drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.import-file-chosen{background:rgba(61,213,224,.08);border:1px solid rgba(61,213,224,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--teal);display:none;align-items:center;gap:8px;margin-top:10px}
+.import-file-chosen.visible{display:flex}
+.import-preview-wrap{margin-top:16px;display:none}
+.import-preview-wrap.visible{display:block}
+.import-preview-hdr{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between}
+.import-preview-count{background:rgba(61,213,224,.15);color:var(--teal);border:1px solid rgba(61,213,224,.25);border-radius:20px;font-size:10px;font-weight:700;padding:2px 8px}
+.import-article-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.import-article-card.error{border-color:rgba(247,90,124,.35);background:rgba(247,90,124,.06)}
+.import-article-cb{width:16px;height:16px;min-width:16px;accent-color:var(--teal);margin-top:2px;cursor:pointer}
+.import-article-info{flex:1;min-width:0}
+.import-article-title{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.import-article-meta{font-size:10.5px;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap}
+.import-article-meta span{display:flex;align-items:center;gap:3px}
+.import-err-msg{font-size:10px;color:var(--red);margin-top:4px}
+.import-error-box{background:rgba(247,90,124,.08);border:1px solid rgba(247,90,124,.3);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--red);margin-top:10px;display:none}
+.import-error-box.visible{display:block}
+.import-modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-shrink:0;background:var(--bg2);flex-wrap:wrap}
+.import-modal-footer-left{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3)}
+.import-select-all{font-size:11px;color:var(--teal);cursor:pointer;text-decoration:underline;background:none;border:none}
+.btn-do-import{background:var(--teal);border:none;border-radius:8px;padding:8px 20px;color:#0d1a1a;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px;transition:.15s}
+.btn-do-import:hover{filter:brightness(1.1)}
+.btn-do-import:disabled{opacity:.4;cursor:not-allowed}
+.import-progress{background:var(--bg3);border-radius:6px;height:6px;margin-top:10px;overflow:hidden;display:none}
+.import-progress.visible{display:block}
+.import-progress-bar{height:100%;background:linear-gradient(90deg,var(--teal),var(--accent));border-radius:6px;width:0%;transition:width .3s}
+.import-status-text{font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--mono)}
+.import-template-btn{background:transparent;border:1px solid var(--border2);border-radius:7px;padding:5px 10px;color:var(--text2);font-size:11px;display:flex;align-items:center;gap:4px;transition:.15s;cursor:pointer}
+.import-template-btn:hover{color:var(--text);border-color:var(--accent);background:rgba(79,110,247,.08)}
+
 /* ── PRINT STYLES ─────────────────────────────── */
 @media print{
   #hdr,#left-panel,#draft-restore-bar,.editor-bar,#toast{display:none!important}
@@ -560,6 +605,7 @@ input,select,textarea{font-family:var(--font)}
           <div style="font-size:10px;color:var(--text3);margin-top:1px">Click any article to edit it</div>
         </div>
         <div class="panel-hdr-btns">
+          <button class="btn-import" onclick="openImportModal()" title="Import articles from AI-generated JSON"><i class="ti ti-file-import"></i> Import JSON</button>
           <button class="btn-add" onclick="newArticle()"><i class="ti ti-plus"></i> New Article</button>
         </div>
       </div>
@@ -2166,5 +2212,422 @@ window.escHtml = escHtml;
   observer.observe(sentinel);
 })();
 </script>
+<!-- ══════════ JSON IMPORT MODAL ══════════ -->
+<div id="import-overlay">
+  <div class="import-modal">
+    <div class="import-modal-hdr">
+      <h3><i class="ti ti-file-import"></i> Import AI-Generated Articles (JSON)</h3>
+      <button class="btn-cancel" style="padding:5px 10px;font-size:12px" onclick="closeImportModal()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="import-modal-body">
+      <!-- Drop zone -->
+      <div class="import-drop-zone" id="import-drop-zone" onclick="document.getElementById('import-file-input').click()">
+        <input type="file" id="import-file-input" accept=".json,application/json" onchange="handleImportFile(event)"/>
+        <i class="ti ti-cloud-upload"></i>
+        <p>Drop your JSON file here or <strong style="color:var(--teal)">click to browse</strong></p>
+        <span>Supports single article or multiple articles in one file</span>
+      </div>
+      <div class="import-file-chosen" id="import-file-chosen">
+        <i class="ti ti-file-code" style="font-size:18px;flex-shrink:0"></i>
+        <span id="import-file-name" style="flex:1;font-size:12px"></span>
+        <button style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px" onclick="clearImportFile()" title="Clear"><i class="ti ti-x"></i></button>
+      </div>
+      <!-- Error box -->
+      <div class="import-error-box" id="import-error-box"></div>
+      <!-- Preview -->
+      <div class="import-preview-wrap" id="import-preview-wrap">
+        <div class="import-preview-hdr">
+          <span>Articles detected in file</span>
+          <span class="import-preview-count" id="import-count-badge">0</span>
+        </div>
+        <div id="import-article-list"></div>
+        <div class="import-progress" id="import-progress">
+          <div class="import-progress-bar" id="import-progress-bar"></div>
+        </div>
+        <div class="import-status-text" id="import-status-text"></div>
+      </div>
+      <!-- Help section -->
+      <div style="margin-top:16px;padding:12px 14px;background:rgba(79,110,247,.06);border:1px solid rgba(79,110,247,.15);border-radius:8px;font-size:11.5px;color:var(--text3);line-height:1.7">
+        <strong style="color:var(--text2);display:block;margin-bottom:4px"><i class="ti ti-info-circle" style="margin-right:4px"></i>How to use with AI</strong>
+        Give the AI the template JSON file (download below), ask it to fill in articles following the same structure, then import the resulting JSON here. Supports a single article object <code style="background:var(--bg4);padding:1px 5px;border-radius:3px;font-size:10px">{…}</code> or an array of articles <code style="background:var(--bg4);padding:1px 5px;border-radius:3px;font-size:10px">[{…},{…}]</code>.
+      </div>
+    </div>
+    <div class="import-modal-footer">
+      <div class="import-modal-footer-left">
+        <button class="import-template-btn" onclick="downloadTemplate()"><i class="ti ti-download"></i> Download Template JSON</button>
+        <button class="import-select-all" id="import-select-all-btn" onclick="toggleSelectAllImport()" style="display:none">Select all</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-cancel" style="font-size:12.5px" onclick="closeImportModal()">Cancel</button>
+        <button class="btn-do-import" id="btn-do-import" onclick="doImportArticles()" disabled><i class="ti ti-database-import"></i> Import Selected</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════ JSON IMPORT SYSTEM ══════════ */
+
+let importParsedArticles = [];
+let importSelectedIds    = new Set();
+
+/* ─ Open / Close ─ */
+window.openImportModal = function() {
+  document.getElementById("import-overlay").classList.add("open");
+  clearImportFile();
+};
+window.closeImportModal = function() {
+  document.getElementById("import-overlay").classList.remove("open");
+};
+// Close on backdrop click
+document.getElementById("import-overlay").addEventListener("click", function(e){
+  if (e.target === this) closeImportModal();
+});
+
+/* ─ Drag & Drop ─ */
+const dropZone = document.getElementById("import-drop-zone");
+dropZone.addEventListener("dragover", e => { e.preventDefault(); dropZone.classList.add("drag-over"); });
+dropZone.addEventListener("dragleave", () => dropZone.classList.remove("drag-over"));
+dropZone.addEventListener("drop", e => {
+  e.preventDefault(); dropZone.classList.remove("drag-over");
+  const file = e.dataTransfer.files[0];
+  if (file) processImportFile(file);
+});
+
+/* ─ File input handler ─ */
+window.handleImportFile = function(e) {
+  const file = e.target.files[0];
+  if (file) processImportFile(file);
+};
+
+window.clearImportFile = function() {
+  importParsedArticles = [];
+  importSelectedIds.clear();
+  document.getElementById("import-file-input").value = "";
+  document.getElementById("import-file-chosen").classList.remove("visible");
+  document.getElementById("import-preview-wrap").classList.remove("visible");
+  document.getElementById("import-error-box").classList.remove("visible");
+  document.getElementById("btn-do-import").disabled = true;
+  document.getElementById("import-select-all-btn").style.display = "none";
+  document.getElementById("import-status-text").textContent = "";
+  document.getElementById("import-progress").classList.remove("visible");
+};
+
+function processImportFile(file) {
+  if (!file.name.endsWith(".json") && file.type !== "application/json") {
+    showImportError("Please upload a valid .json file.");
+    return;
+  }
+  document.getElementById("import-file-name").textContent = file.name + " (" + (file.size/1024).toFixed(1) + " KB)";
+  document.getElementById("import-file-chosen").classList.add("visible");
+  document.getElementById("import-error-box").classList.remove("visible");
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      let raw = JSON.parse(e.target.result);
+      // Support both single object and array
+      const articles = Array.isArray(raw) ? raw : [raw];
+      if (!articles.length) { showImportError("JSON file contains no articles."); return; }
+      importParsedArticles = articles.map((a, i) => ({ ...a, _importIdx: i, _importId: "imp_" + i }));
+      importSelectedIds = new Set(importParsedArticles.map(a => a._importId));
+      renderImportPreview();
+    } catch(err) {
+      showImportError("Invalid JSON: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function showImportError(msg) {
+  const box = document.getElementById("import-error-box");
+  box.textContent = "⚠ " + msg;
+  box.classList.add("visible");
+  document.getElementById("import-preview-wrap").classList.remove("visible");
+  document.getElementById("btn-do-import").disabled = true;
+}
+
+function renderImportPreview() {
+  const wrap = document.getElementById("import-preview-wrap");
+  const list = document.getElementById("import-article-list");
+  const badge = document.getElementById("import-count-badge");
+  badge.textContent = importParsedArticles.length;
+  wrap.classList.add("visible");
+  document.getElementById("import-select-all-btn").style.display = "";
+  updateImportSelectAllLabel();
+
+  list.innerHTML = importParsedArticles.map(a => {
+    const valid = validateImportArticle(a);
+    const isChecked = importSelectedIds.has(a._importId);
+    const catDisplay = (a.category||"").replace(/-/g," ").replace(/\b\w/g,c=>c.toUpperCase());
+    const blockCount = Array.isArray(a.content) ? a.content.length : 0;
+    return `<div class="import-article-card${valid.ok?"":" error"}" id="icard_${a._importId}">
+      <input type="checkbox" class="import-article-cb" ${isChecked?"checked":""} onchange="toggleImportSelect('${a._importId}',this.checked)" ${valid.ok?"":"disabled title='Fix errors to import'"} />
+      <div class="import-article-info">
+        <div class="import-article-title">${escHtml(a.title||"(no title)")}</div>
+        <div class="import-article-meta">
+          <span><i class="ti ti-tag" style="font-size:10px"></i>${escHtml(catDisplay||"no category")}</span>
+          <span><i class="ti ti-calendar" style="font-size:10px"></i>${escHtml(a.date||"no date")}</span>
+          <span><i class="ti ti-flame" style="font-size:10px"></i>${escHtml(a.importance||"—")}</span>
+          <span><i class="ti ti-layout-list" style="font-size:10px"></i>${blockCount} block${blockCount!==1?"s":""}</span>
+          ${Array.isArray(a.tags)&&a.tags.length ? `<span><i class="ti ti-hash" style="font-size:10px"></i>${a.tags.slice(0,3).map(t=>escHtml(t)).join(", ")}</span>` : ""}
+        </div>
+        ${!valid.ok ? `<div class="import-err-msg"><i class="ti ti-alert-circle"></i> ${valid.errors.join(" · ")}</div>` : ""}
+      </div>
+      <span style="font-size:10px;padding:2px 7px;border-radius:4px;font-weight:700;background:${valid.ok?"rgba(61,224,160,.12)":"rgba(247,90,124,.12)"};color:${valid.ok?"var(--green)":"var(--red)"};">${valid.ok?"✓ Ready":"✗ Error"}</span>
+    </div>`;
+  }).join("");
+  updateImportBtn();
+}
+
+function validateImportArticle(a) {
+  const errors = [];
+  if (!a.title || !a.title.trim()) errors.push("Missing title");
+  if (!a.category) errors.push("Missing category");
+  if (!a.date) errors.push("Missing date");
+  if (!Array.isArray(a.content) || !a.content.length) errors.push("No content blocks");
+  return { ok: errors.length === 0, errors };
+}
+
+window.toggleImportSelect = function(id, checked) {
+  if (checked) importSelectedIds.add(id);
+  else importSelectedIds.delete(id);
+  updateImportBtn();
+  updateImportSelectAllLabel();
+};
+
+window.toggleSelectAllImport = function() {
+  const validIds = importParsedArticles
+    .filter(a => validateImportArticle(a).ok)
+    .map(a => a._importId);
+  if (importSelectedIds.size === validIds.length) {
+    importSelectedIds.clear();
+    document.querySelectorAll(".import-article-cb:not(:disabled)").forEach(cb => cb.checked = false);
+  } else {
+    validIds.forEach(id => importSelectedIds.add(id));
+    document.querySelectorAll(".import-article-cb:not(:disabled)").forEach(cb => cb.checked = true);
+  }
+  updateImportBtn();
+  updateImportSelectAllLabel();
+};
+
+function updateImportSelectAllLabel() {
+  const btn = document.getElementById("import-select-all-btn");
+  const validCount = importParsedArticles.filter(a => validateImportArticle(a).ok).length;
+  btn.textContent = importSelectedIds.size === validCount ? "Deselect all" : "Select all";
+}
+
+function updateImportBtn() {
+  document.getElementById("btn-do-import").disabled = importSelectedIds.size === 0;
+  const btn = document.getElementById("btn-do-import");
+  if (!btn.disabled) btn.innerHTML = `<i class="ti ti-database-import"></i> Import ${importSelectedIds.size} Article${importSelectedIds.size!==1?"s":""}`;
+  else btn.innerHTML = `<i class="ti ti-database-import"></i> Import Selected`;
+}
+
+/* ─ The actual import ─ */
+window.doImportArticles = async function() {
+  const toImport = importParsedArticles.filter(a => importSelectedIds.has(a._importId));
+  if (!toImport.length) return;
+
+  const btn = document.getElementById("btn-do-import");
+  btn.disabled = true;
+  const progress = document.getElementById("import-progress");
+  const progressBar = document.getElementById("import-progress-bar");
+  const statusText = document.getElementById("import-status-text");
+  progress.classList.add("visible");
+  progressBar.style.width = "0%";
+  statusText.textContent = "Starting import…";
+
+  let successCount = 0, failCount = 0;
+  for (let i = 0; i < toImport.length; i++) {
+    const a = toImport[i];
+    statusText.textContent = `Importing ${i+1} of ${toImport.length}: "${a.title}"…`;
+    progressBar.style.width = ((i / toImport.length) * 100) + "%";
+    try {
+      // Build content blocks — support both pre-built blocks and legacy text
+      let contentBlocks = [];
+      if (Array.isArray(a.content) && a.content.length) {
+        contentBlocks = a.content; // already in block format
+      }
+
+      // Build rawHTML from blocks for Firestore fidelity
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = deserializeBlocks(contentBlocks);
+      const rawHTML = tempDiv.innerHTML;
+
+      const payload = {
+        title:      (a.title||"").trim(),
+        category:   a.category || "",
+        importance: a.importance || "medium",
+        date:       Timestamp.fromDate(new Date(a.date)),
+        tags:       Array.isArray(a.tags) ? a.tags : [],
+        content:    contentBlocks,
+        rawHTML,
+        published:  a.published !== undefined ? !!a.published : true,
+        createdAt:  serverTimestamp(),
+        updatedAt:  serverTimestamp()
+      };
+      await addDoc(collection(db, COL), payload);
+      successCount++;
+    } catch(err) {
+      console.error("Import failed for:", a.title, err);
+      failCount++;
+    }
+  }
+  progressBar.style.width = "100%";
+  statusText.textContent = `Done! ${successCount} imported${failCount ? ", " + failCount + " failed" : ""}`;
+  showToast(
+    successCount > 0
+      ? `✓ ${successCount} article${successCount!==1?"s":""} imported successfully!${failCount?" ("+failCount+" failed)":""}`
+      : "Import failed for all articles.",
+    successCount > 0 ? "success" : "error"
+  );
+  loadList(true);
+  setTimeout(() => closeImportModal(), 1800);
+};
+
+/* ─ Download template JSON ─ */
+window.downloadTemplate = function() {
+  const template = [
+    {
+      "title": "India Launches GSAT-20 Communication Satellite",
+      "category": "space",
+      "importance": "high",
+      "date": "2025-06-01",
+      "published": true,
+      "tags": ["ISRO", "GSAT", "satellite", "communication"],
+      "content": [
+        {
+          "type": "h2",
+          "html": "India Launches GSAT-20 Communication Satellite"
+        },
+        {
+          "type": "para",
+          "html": "India successfully launched the <strong>GSAT-20</strong> communication satellite aboard the <em>SpaceX Falcon 9</em> rocket from Cape Canaveral, USA, marking a significant milestone in India's space communication capabilities."
+        },
+        {
+          "type": "h3",
+          "html": "Key Highlights"
+        },
+        {
+          "type": "ul",
+          "listType": "disc",
+          "items": [
+            { "html": "GSAT-20 is India's heaviest communication satellite at <strong>4,700 kg</strong>" },
+            { "html": "Provides broadband internet coverage across India including remote areas" },
+            { "html": "Designed for a mission life of <strong>14 years</strong>" },
+            { "html": "Operates in Ka-band for high-throughput data transmission" }
+          ]
+        },
+        {
+          "type": "highlight",
+          "html": "This launch demonstrates ISRO's growing reliance on commercial launch vehicles for heavier payloads that exceed GSLV Mk III capacity."
+        },
+        {
+          "type": "h3",
+          "html": "Why It Matters for UPSC"
+        },
+        {
+          "type": "para",
+          "html": "This satellite is important from the perspective of India's digital connectivity goals under <strong>BharatNet</strong> and the government's push for <u>satellite broadband in rural areas</u>."
+        },
+        {
+          "type": "table",
+          "headers": ["Parameter", "Value"],
+          "rows": [
+            { "cells": "Mass||4700 kg" },
+            { "cells": "Orbit||Geostationary (36,000 km)" },
+            { "cells": "Launch Vehicle||SpaceX Falcon 9" },
+            { "cells": "Launch Site||Cape Canaveral, USA" },
+            { "cells": "Mission Life||14 years" }
+          ]
+        },
+        {
+          "type": "h4",
+          "html": "Quick Revision Points"
+        },
+        {
+          "type": "ol",
+          "items": [
+            { "html": "Launched by ISRO using a commercial foreign rocket" },
+            { "html": "Heaviest satellite launched by India to date" },
+            { "html": "Ka-band enables high-speed internet" }
+          ]
+        },
+        {
+          "type": "hr"
+        },
+        {
+          "type": "para",
+          "html": "<em>Source: ISRO Official Press Release, June 2025</em>"
+        }
+      ]
+    },
+    {
+      "title": "RBI Raises Repo Rate by 25 Basis Points",
+      "category": "governance",
+      "importance": "medium",
+      "date": "2025-06-02",
+      "published": false,
+      "tags": ["RBI", "repo rate", "monetary policy", "economy"],
+      "content": [
+        {
+          "type": "h2",
+          "html": "RBI Raises Repo Rate by 25 Basis Points"
+        },
+        {
+          "type": "para",
+          "html": "The Reserve Bank of India's Monetary Policy Committee (MPC) decided to raise the <strong>repo rate by 25 basis points</strong> to <code>6.75%</code> in its June 2025 bi-monthly policy review."
+        },
+        {
+          "type": "h3",
+          "html": "Key Policy Decisions"
+        },
+        {
+          "type": "ul",
+          "listType": "arrow",
+          "items": [
+            { "html": "<strong>Repo Rate</strong>: 6.75% (up from 6.50%)" },
+            { "html": "<strong>Standing Deposit Facility (SDF)</strong>: 6.50%" },
+            { "html": "<strong>Marginal Standing Facility (MSF)</strong>: 7.00%" },
+            { "html": "GDP growth forecast retained at <strong>7.2%</strong> for FY26" }
+          ]
+        },
+        {
+          "type": "highlight",
+          "html": "<strong>Stance</strong>: The MPC maintained its '<em>withdrawal of accommodation</em>' stance to ensure inflation progressively aligns to the 4% target."
+        },
+        {
+          "type": "pre",
+          "html": "Repo Rate History (2024-25):\nApr 2024: 6.50%\nJun 2024: 6.50% (hold)\nAug 2024: 6.50% (hold)\nOct 2024: 6.50% (hold)\nDec 2024: 6.50% (hold)\nFeb 2025: 6.50% (hold)\nJun 2025: 6.75% (hike)"
+        },
+        {
+          "type": "h3",
+          "html": "Impact Analysis"
+        },
+        {
+          "type": "ul",
+          "listType": "check",
+          "items": [
+            { "html": "Home and auto loan EMIs will increase", "checked": false },
+            { "html": "Fixed deposit rates may improve for savers", "checked": true },
+            { "html": "Borrowing costs for MSMEs likely to rise", "checked": false }
+          ]
+        }
+      ]
+    }
+  ];
+
+  const blob = new Blob([JSON.stringify(template, null, 2)], { type: "application/json" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = "ca_hub_article_template.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Template JSON downloaded!", "success");
+};
+</script>
+
 </body>
 </html>
